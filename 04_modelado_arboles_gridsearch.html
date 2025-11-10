@@ -1,0 +1,1090 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>&lt;no title&gt; &#8212; Miniproyecto 6 · Telco Churn con Árboles + MLOps</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '04_modelado_arboles_gridsearch';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="05_evaluacion_metricas_clasificacion.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="03_preprocesamiento.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Miniproyecto 6 · Telco Churn con Árboles + MLOps - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Miniproyecto 6 · Telco Churn con Árboles + MLOps - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Proyecto Integrador: Predicción de Churn en Telecomunicaciones con Modelos de Árboles e Interpretabilidad
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Proyecto</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_contexto_churn.html">1. Contexto del Dataset: <em>Telco Customer Churn</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_eda.html"><strong>2. Análisis Exploratorio de Datos (EDA)</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_interpretabilidad.html">SECCION 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_dashboard_dash.html">SECCION 9</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Referencias</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="references.html">Referencias</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/Juan2001968/MLOPS_miniproyect5" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Juan2001968/MLOPS_miniproyect5/issues/new?title=Issue%20on%20page%20%2F04_modelado_arboles_gridsearch.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/04_modelado_arboles_gridsearch.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1><no title></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="simple visible nav section-nav flex-column">
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">classification_report</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="c1"># Modelos gradiente</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xgboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">XGBClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMClassifier</span>
+
+<span class="c1"># Rutas</span>
+<span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+<span class="n">DATA</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span> <span class="o">/</span> <span class="s2">&quot;processed&quot;</span>
+<span class="n">MODELS</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">&quot;models&quot;</span>
+<span class="n">MODELS</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Cargar datasets procesados de la Sección 3</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">DATA</span><span class="o">/</span><span class="s2">&quot;X_train.parquet&quot;</span><span class="p">)</span>
+<span class="n">X_test</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">DATA</span><span class="o">/</span><span class="s2">&quot;X_test.parquet&quot;</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">DATA</span><span class="o">/</span><span class="s2">&quot;y_train.parquet&quot;</span><span class="p">)[</span><span class="s2">&quot;Churn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int8&quot;</span><span class="p">)</span>
+<span class="n">y_test</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">DATA</span><span class="o">/</span><span class="s2">&quot;y_test.parquet&quot;</span><span class="p">)[</span><span class="s2">&quot;Churn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int8&quot;</span><span class="p">)</span>
+
+<span class="c1"># Cargar preprocessor (ColumnTransformer)</span>
+<span class="n">preprocessor</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">ROOT</span><span class="o">/</span><span class="s2">&quot;models&quot;</span><span class="o">/</span><span class="s2">&quot;preprocessor.joblib&quot;</span><span class="p">)</span>
+
+<span class="c1"># Pos_weight para clases desbalanceadas (para XGB/LGBM)</span>
+<span class="n">pos_weight</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span> <span class="o">-</span> <span class="n">y_train</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <span class="n">y_train</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">pos_weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">pos_weight</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">))</span>  <span class="c1"># acotar por seguridad</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;scale_pos_weight (aprox):&quot;</span><span class="p">,</span> <span class="n">pos_weight</span><span class="p">)</span>
+
+<span class="c1"># CV y scoring</span>
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">:</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span> <span class="s2">&quot;f1&quot;</span><span class="p">:</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span> <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span><span class="s2">&quot;accuracy&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>scale_pos_weight (aprox): 2.768561872909699
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+<span class="n">DATA</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>
+<span class="n">PROC</span> <span class="o">=</span> <span class="n">DATA</span> <span class="o">/</span> <span class="s2">&quot;processed&quot;</span>
+<span class="n">INTERIM</span> <span class="o">=</span> <span class="n">DATA</span> <span class="o">/</span> <span class="s2">&quot;interim&quot;</span>
+<span class="n">INTERIM</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">TARGET</span> <span class="o">=</span> <span class="s2">&quot;Churn&quot;</span>
+<span class="n">ID_COL</span> <span class="o">=</span> <span class="s2">&quot;customerID&quot;</span>
+
+<span class="c1"># 1) Carga del parquet limpio del EDA</span>
+<span class="n">df_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">PROC</span> <span class="o">/</span> <span class="s2">&quot;telco_churn.parquet&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2) Normalizaciones mínimas</span>
+<span class="c1"># 2.1 Target a 0/1 (robusto a mayúsculas/acentos/espacios)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">df_raw</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">mapa</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;yes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;sí&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;si&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;true&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+<span class="n">df_raw</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapa</span><span class="p">)</span>
+
+<span class="c1"># Si quedó algo sin mapear, avisa para inspección</span>
+<span class="n">resto</span> <span class="o">=</span> <span class="n">df_raw</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_raw</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">TARGET</span><span class="p">]</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">resto</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Valores no mapeados en Churn -&gt;&quot;</span><span class="p">,</span> <span class="n">df_raw</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_raw</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">TARGET</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="c1"># Si sabes que los NaN equivalen a &#39;No&#39;, puedes descomentar:</span>
+    <span class="c1"># df_raw[TARGET] = df_raw[TARGET].fillna(0)</span>
+
+<span class="n">df_raw</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_raw</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int8&quot;</span><span class="p">)</span>
+
+<span class="c1"># 2.2 TotalCharges a numérico (en este dataset suele haber strings vacíos)</span>
+<span class="k">if</span> <span class="s2">&quot;TotalCharges&quot;</span> <span class="ow">in</span> <span class="n">df_raw</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="n">df_raw</span><span class="p">[</span><span class="s2">&quot;TotalCharges&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df_raw</span><span class="p">[</span><span class="s2">&quot;TotalCharges&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3) X/y crudos (sin procesar)</span>
+<span class="n">X_raw</span> <span class="o">=</span> <span class="n">df_raw</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">TARGET</span><span class="p">])</span>
+<span class="n">y_raw</span> <span class="o">=</span> <span class="n">df_raw</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span>
+
+<span class="c1"># 4) Split estratificado</span>
+<span class="n">X_train_raw</span><span class="p">,</span> <span class="n">X_test_raw</span><span class="p">,</span> <span class="n">y_train_raw</span><span class="p">,</span> <span class="n">y_test_raw</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X_raw</span><span class="p">,</span> <span class="n">y_raw</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y_raw</span>
+<span class="p">)</span>
+
+<span class="c1"># 5) Guardar para la sección de modelado (pipeline con preprocessor)</span>
+<span class="n">X_train_raw</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">INTERIM</span><span class="o">/</span><span class="s2">&quot;X_train_raw.parquet&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">X_test_raw</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">INTERIM</span><span class="o">/</span><span class="s2">&quot;X_test_raw.parquet&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">y_train_raw</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">TARGET</span><span class="p">)</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">INTERIM</span><span class="o">/</span><span class="s2">&quot;y_train_raw.parquet&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">y_test_raw</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">TARGET</span><span class="p">)</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">INTERIM</span><span class="o">/</span><span class="s2">&quot;y_test_raw.parquet&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OK: splits crudos guardados en data/interim/&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Distribución y_train:&quot;</span><span class="p">,</span> <span class="n">y_train_raw</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Distribución y_test :&quot;</span><span class="p">,</span> <span class="n">y_test_raw</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OK: splits crudos guardados en data/interim/
+Distribución y_train: {0: 0.735, 1: 0.265}
+Distribución y_test : {0: 0.735, 1: 0.265}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+
+<span class="n">ROOT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+<span class="n">INTERIM</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span> <span class="o">/</span> <span class="s2">&quot;interim&quot;</span>
+<span class="n">MODELS</span> <span class="o">=</span> <span class="n">ROOT</span> <span class="o">/</span> <span class="s2">&quot;models&quot;</span>
+
+<span class="c1"># Carga splits crudos</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">INTERIM</span><span class="o">/</span><span class="s2">&quot;X_train_raw.parquet&quot;</span><span class="p">)</span>
+<span class="n">X_test</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">INTERIM</span><span class="o">/</span><span class="s2">&quot;X_test_raw.parquet&quot;</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">INTERIM</span><span class="o">/</span><span class="s2">&quot;y_train_raw.parquet&quot;</span><span class="p">)[</span><span class="s2">&quot;Churn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int8&quot;</span><span class="p">)</span>
+<span class="n">y_test</span>  <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">INTERIM</span><span class="o">/</span><span class="s2">&quot;y_test_raw.parquet&quot;</span><span class="p">)[</span><span class="s2">&quot;Churn&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int8&quot;</span><span class="p">)</span>
+
+<span class="c1"># Carga tu preprocessor.joblib (hecho en sección 3)</span>
+<span class="n">preprocessor</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODELS</span><span class="o">/</span><span class="s2">&quot;preprocessor.joblib&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shapes:&quot;</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shapes: (5634, 20) (1409, 20)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rf_pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span> <span class="n">preprocessor</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">RandomForestClassifier</span><span class="p">(</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+        <span class="n">class_weight</span><span class="o">=</span><span class="s2">&quot;balanced&quot;</span><span class="p">,</span>   <span class="c1"># ayuda con desbalance</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+    <span class="p">))</span>
+<span class="p">])</span>
+
+<span class="n">rf_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;clf__max_features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sqrt&quot;</span><span class="p">,</span> <span class="s2">&quot;log2&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;clf__min_samples_split&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+    <span class="s2">&quot;clf__min_samples_leaf&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+    <span class="s2">&quot;clf__bootstrap&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">],</span>
+    <span class="s2">&quot;clf__criterion&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;gini&quot;</span><span class="p">,</span> <span class="s2">&quot;entropy&quot;</span><span class="p">]</span>  <span class="c1"># también &#39;log_loss&#39; en nuevas versiones</span>
+<span class="p">}</span>
+
+<span class="n">rf_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">rf_pipe</span><span class="p">,</span> <span class="n">rf_grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="n">rf_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RF best ROC-AUC:&quot;</span><span class="p">,</span> <span class="n">rf_search</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RF best params:&quot;</span><span class="p">,</span> <span class="n">rf_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+
+<span class="c1"># Guardar</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">rf_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span> <span class="n">MODELS</span><span class="o">/</span><span class="s2">&quot;rf_best.joblib&quot;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rf_search</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">MODELS</span><span class="o">/</span><span class="s2">&quot;rf_cv_results.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fitting 5 folds for each of 36 candidates, totalling 180 fits
+RF best ROC-AUC: 0.8442564977030317
+RF best params: {&#39;clf__bootstrap&#39;: True, &#39;clf__criterion&#39;: &#39;gini&#39;, &#39;clf__max_features&#39;: &#39;log2&#39;, &#39;clf__min_samples_leaf&#39;: 4, &#39;clf__min_samples_split&#39;: 2}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb_pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span> <span class="n">preprocessor</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">XGBClassifier</span><span class="p">(</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+        <span class="n">objective</span><span class="o">=</span><span class="s2">&quot;binary:logistic&quot;</span><span class="p">,</span>
+        <span class="n">eval_metric</span><span class="o">=</span><span class="s2">&quot;auc&quot;</span><span class="p">,</span>
+        <span class="n">tree_method</span><span class="o">=</span><span class="s2">&quot;hist&quot;</span><span class="p">,</span>      <span class="c1"># &#39;gpu_hist&#39; si tienes GPU</span>
+        <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+        <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+    <span class="p">))</span>
+<span class="p">])</span>
+
+<span class="n">xgb_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;clf__max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span>
+    <span class="s2">&quot;clf__min_child_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s2">&quot;clf__gamma&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="s2">&quot;clf__reg_alpha&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="s2">&quot;clf__reg_lambda&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+    <span class="s2">&quot;clf__scale_pos_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">pos_weight</span><span class="p">],</span>  <span class="c1"># maneja desbalance</span>
+    <span class="s2">&quot;clf__subsample&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
+    <span class="s2">&quot;clf__colsample_bytree&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">xgb_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">xgb_pipe</span><span class="p">,</span> <span class="n">xgb_grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="n">xgb_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XGB best ROC-AUC:&quot;</span><span class="p">,</span> <span class="n">xgb_search</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XGB best params:&quot;</span><span class="p">,</span> <span class="n">xgb_search</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">xgb_search</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span> <span class="n">MODELS</span><span class="o">/</span><span class="s2">&quot;xgb_best.joblib&quot;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">xgb_search</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">MODELS</span><span class="o">/</span><span class="s2">&quot;xgb_cv_results.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fitting 5 folds for each of 1296 candidates, totalling 6480 fits
+XGB best ROC-AUC: 0.848440533786993
+XGB best params: {&#39;clf__colsample_bytree&#39;: 0.7, &#39;clf__gamma&#39;: 1.0, &#39;clf__max_depth&#39;: 3, &#39;clf__min_child_weight&#39;: 3, &#39;clf__reg_alpha&#39;: 1.0, &#39;clf__reg_lambda&#39;: 2.0, &#39;clf__scale_pos_weight&#39;: 1.0, &#39;clf__subsample&#39;: 0.9}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lightgbm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LGBMClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Memory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># 5 particiones estratificadas (requisito)</span>
+<span class="n">cv5</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">scoring</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">:</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span><span class="s2">&quot;f1&quot;</span><span class="p">:</span><span class="s2">&quot;f1&quot;</span><span class="p">,</span><span class="s2">&quot;accuracy&quot;</span><span class="p">:</span><span class="s2">&quot;accuracy&quot;</span><span class="p">}</span>
+
+<span class="c1"># cachea el preprocesamiento para no rehacer OHE/imputación en cada fold</span>
+<span class="n">cache_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../.cache_sklearn&quot;</span><span class="p">);</span> <span class="n">cache_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">pipe_lgb</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span>
+    <span class="n">steps</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span> <span class="n">preprocessor</span><span class="p">),</span>
+           <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">LGBMClassifier</span><span class="p">(</span>
+               <span class="n">n_estimators</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+               <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+               <span class="n">objective</span><span class="o">=</span><span class="s2">&quot;binary&quot;</span><span class="p">,</span>
+               <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+               <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+           <span class="p">))],</span>
+    <span class="n">memory</span><span class="o">=</span><span class="n">Memory</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Grid FINAL pequeño (12–24 combinaciones aprox). Ajusta si quieres 16–20 como tope.</span>
+<span class="n">param_grid_final</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;clf__num_leaves&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">31</span><span class="p">,</span> <span class="mi">63</span><span class="p">],</span>
+    <span class="s2">&quot;clf__min_child_samples&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+    <span class="s2">&quot;clf__reg_alpha&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+    <span class="s2">&quot;clf__reg_lambda&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+    <span class="s2">&quot;clf__subsample&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">],</span>
+    <span class="s2">&quot;clf__colsample_bytree&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">],</span>
+    <span class="s2">&quot;clf__class_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;balanced&quot;</span><span class="p">],</span>  <span class="c1"># ayuda con desbalance</span>
+    <span class="s2">&quot;clf__max_bin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">255</span><span class="p">],</span>                    <span class="c1"># fijo para acelerar</span>
+<span class="p">}</span>
+
+<span class="n">search5</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">pipe_lgb</span><span class="p">,</span>
+    <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid_final</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">cv5</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
+    <span class="n">refit</span><span class="o">=</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="n">search5</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best ROC-AUC (cv=5):&quot;</span><span class="p">,</span> <span class="n">search5</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best params (cv=5):&quot;</span><span class="p">,</span> <span class="n">search5</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fitting 5 folds for each of 32 candidates, totalling 160 fits
+________________________________________________________________________________
+[Memory] Calling sklearn.pipeline._fit_transform_one...
+_fit_transform_one(ColumnTransformer(transformers=[(&#39;num&#39;, SimpleImputer(strategy=&#39;median&#39;),
+                                 [&#39;SeniorCitizen&#39;, &#39;tenure&#39;, &#39;MonthlyCharges&#39;,
+                                  &#39;TotalCharges&#39;]),
+                                (&#39;cat&#39;,
+                                 OneHotEncoder(handle_unknown=&#39;ignore&#39;,
+                                               sparse_output=False),
+                                 [&#39;gender&#39;, &#39;Partner&#39;, &#39;Dependents&#39;,
+                                  &#39;PhoneService&#39;, &#39;MultipleLines&#39;,
+                                  &#39;InternetService&#39;, &#39;OnlineSecurity&#39;,
+                                  &#39;OnlineBackup&#39;, &#39;DeviceProtection&#39;,
+                                  &#39;TechSupport&#39;, &#39;StreamingTV&#39;,
+                                  &#39;StreamingMovies&#39;, &#39;Contract&#39;,
+                                  &#39;PaperlessBilling&#39;, &#39;PaymentMethod&#39;])],
+                  verbose_feature_names_out=False), 
+      customerID  gender  SeniorCitizen Partner Dependents  tenure  \
+0     4950-BDEUX    Male              0      No         No      35   
+1     7993-NQLJE    Male              0     Yes        Yes      15   
+2     7321-ZNSLA    Male              0     Yes        Yes      13   
+3     4922-CVPDX  Female              0     Yes         No      26   
+4     2903-YYTBW    Male              0     Yes        Yes       1   
+...          ...     ...            ...     ...        ...     ...   
+5629  6308-CQRBU  Female              0     Yes         No      71   
+5630  2842-JTCCU    Male              0      No         No       2   
+5631  6402-ZFPPI  Female              1      No         No      25   
+..., 
+0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+5629    0
+5630    1
+5631    1
+5632    0
+5633    0
+Name: Churn, Length: 5634, dtype: int8, weight=None, message_clsname=&#39;Pipeline&#39;, message=None, params={ &#39;decision_function&#39;: {},
+  &#39;fit&#39;: {},
+  &#39;fit_predict&#39;: {},
+  &#39;fit_transform&#39;: {},
+  &#39;inverse_transform&#39;: {},
+  &#39;partial_fit&#39;: {},
+  &#39;predict&#39;: {},
+  &#39;predict_log_proba&#39;: {},
+  &#39;predict_proba&#39;: {},
+  &#39;score&#39;: {},
+  &#39;split&#39;: {},
+  &#39;transform&#39;: {}})
+________________________________________________fit_transform_one - 0.0s, 0.0min
+[LightGBM] [Info] Number of positive: 1495, number of negative: 4139
+[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000528 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 667
+[LightGBM] [Info] Number of data points in the train set: 5634, number of used features: 45
+[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -&gt; initscore=0.000000
+[LightGBM] [Info] Start training from score 0.000000
+Best ROC-AUC (cv=5): 0.8339218758605339
+Best params (cv=5): {&#39;clf__class_weight&#39;: &#39;balanced&#39;, &#39;clf__colsample_bytree&#39;: 0.8, &#39;clf__max_bin&#39;: 255, &#39;clf__min_child_samples&#39;: 20, &#39;clf__num_leaves&#39;: 31, &#39;clf__reg_alpha&#39;: 0.5, &#39;clf__reg_lambda&#39;: 0.5, &#39;clf__subsample&#39;: 0.8}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">CWD</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="c1"># Si corres dentro de docs/, sube a la raíz del proyecto:</span>
+<span class="n">PROJECT</span> <span class="o">=</span> <span class="n">CWD</span> <span class="k">if</span> <span class="n">CWD</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;docs&quot;</span> <span class="k">else</span> <span class="n">CWD</span><span class="o">.</span><span class="n">parent</span>
+<span class="n">MODELS</span> <span class="o">=</span> <span class="n">PROJECT</span> <span class="o">/</span> <span class="s2">&quot;models&quot;</span>
+<span class="n">MODELS</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CWD:&quot;</span><span class="p">,</span> <span class="n">CWD</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PROJECT:&quot;</span><span class="p">,</span> <span class="n">PROJECT</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MODELS:&quot;</span><span class="p">,</span> <span class="n">MODELS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Modelos disponibles:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">MODELS</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.joblib&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CWD: c:\Users\juana\MLOPS\miniproyecto6\docs
+PROJECT: c:\Users\juana\MLOPS\miniproyecto6
+MODELS: c:\Users\juana\MLOPS\miniproyecto6\models
+Modelos disponibles: [WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/preprocessor.joblib&#39;), WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/rf_best.joblib&#39;), WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/xgb_best.joblib&#39;)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best ROC-AUC (cv=5):&quot;</span><span class="p">,</span> <span class="n">search5</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best params (cv=5):&quot;</span><span class="p">,</span> <span class="n">search5</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+
+<span class="c1"># 2.1) Guardar el MEJOR PIPELINE (preprocesador + lgbm)</span>
+<span class="n">lgbm_best_path</span> <span class="o">=</span> <span class="n">MODELS</span> <span class="o">/</span> <span class="s2">&quot;lgbm_best.joblib&quot;</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">search5</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span> <span class="n">lgbm_best_path</span><span class="p">)</span>
+
+<span class="c1"># 2.2) Guardar resultados de la CV</span>
+<span class="n">cv_path</span> <span class="o">=</span> <span class="n">MODELS</span> <span class="o">/</span> <span class="s2">&quot;lgbm_cv_results.csv&quot;</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">search5</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">cv_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># 2.3) (Opcional) Guardar SOLO el clasificador ya ajustado</span>
+<span class="n">clf_only_path</span> <span class="o">=</span> <span class="n">MODELS</span> <span class="o">/</span> <span class="s2">&quot;lgbm_clf_only.joblib&quot;</span>
+<span class="n">best_clf</span> <span class="o">=</span> <span class="n">search5</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="s2">&quot;clf&quot;</span><span class="p">]</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">best_clf</span><span class="p">,</span> <span class="n">clf_only_path</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Guardados:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; -&quot;</span><span class="p">,</span> <span class="n">lgbm_best_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; -&quot;</span><span class="p">,</span> <span class="n">cv_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; -&quot;</span><span class="p">,</span> <span class="n">clf_only_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ahora hay:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">MODELS</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.joblib&#39;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best ROC-AUC (cv=5): 0.8339218758605339
+Best params (cv=5): {&#39;clf__class_weight&#39;: &#39;balanced&#39;, &#39;clf__colsample_bytree&#39;: 0.8, &#39;clf__max_bin&#39;: 255, &#39;clf__min_child_samples&#39;: 20, &#39;clf__num_leaves&#39;: 31, &#39;clf__reg_alpha&#39;: 0.5, &#39;clf__reg_lambda&#39;: 0.5, &#39;clf__subsample&#39;: 0.8}
+Guardados:
+ - c:\Users\juana\MLOPS\miniproyecto6\models\lgbm_best.joblib
+ - c:\Users\juana\MLOPS\miniproyecto6\models\lgbm_cv_results.csv
+ - c:\Users\juana\MLOPS\miniproyecto6\models\lgbm_clf_only.joblib
+Ahora hay: [WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/lgbm_best.joblib&#39;), WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/lgbm_clf_only.joblib&#39;), WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/preprocessor.joblib&#39;), WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/rf_best.joblib&#39;), WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/xgb_best.joblib&#39;)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">candidates</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;rf&quot;</span><span class="p">:</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODELS</span><span class="o">/</span><span class="s2">&quot;rf_best.joblib&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;xgb&quot;</span><span class="p">:</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODELS</span><span class="o">/</span><span class="s2">&quot;xgb_best.joblib&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;lgbm&quot;</span><span class="p">:</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODELS</span><span class="o">/</span><span class="s2">&quot;lgbm_best.joblib&quot;</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">candidates</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">prob</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">prob</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">scores</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;roc_auc&quot;</span><span class="p">:</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">prob</span><span class="p">),</span>
+        <span class="s2">&quot;f1&quot;</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred</span><span class="p">),</span>
+        <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>roc_auc</th>
+      <th>f1</th>
+      <th>accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>rf</th>
+      <td>0.839673</td>
+      <td>0.624277</td>
+      <td>0.769340</td>
+    </tr>
+    <tr>
+      <th>xgb</th>
+      <td>0.846081</td>
+      <td>0.579666</td>
+      <td>0.803407</td>
+    </tr>
+    <tr>
+      <th>lgbm</th>
+      <td>0.829939</td>
+      <td>0.611111</td>
+      <td>0.761533</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Escoge el mejor por ROC-AUC y muestra reporte</span>
+<span class="n">best_name</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">scores</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">])</span>
+<span class="n">best_model</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">best_name</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mejor en test:&quot;</span><span class="p">,</span> <span class="n">best_name</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">best_name</span><span class="p">])</span>
+
+<span class="n">y_prob</span> <span class="o">=</span> <span class="n">best_model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_prob</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Classification Report:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+
+<span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="n">cm_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;No Churn&quot;</span><span class="p">,</span><span class="s2">&quot;Churn&quot;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Pred No&quot;</span><span class="p">,</span><span class="s2">&quot;Pred Sí&quot;</span><span class="p">])</span>
+<span class="n">cm_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mejor en test: xgb {&#39;roc_auc&#39;: np.float64(0.8460810147510915), &#39;f1&#39;: 0.5796661608497724, &#39;accuracy&#39;: 0.8034066713981547}
+
+Classification Report:
+               precision    recall  f1-score   support
+
+           0       0.84      0.91      0.87      1035
+           1       0.67      0.51      0.58       374
+
+    accuracy                           0.80      1409
+   macro avg       0.75      0.71      0.73      1409
+weighted avg       0.79      0.80      0.79      1409
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Pred No</th>
+      <th>Pred Sí</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>No Churn</th>
+      <td>941</td>
+      <td>94</td>
+    </tr>
+    <tr>
+      <th>Churn</th>
+      <td>183</td>
+      <td>191</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03_preprocesamiento.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="05_evaluacion_metricas_clasificacion.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="simple visible nav section-nav flex-column">
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Juan Andres Ramos, Mariana Franco y Jeronimo Dominguez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <p> Proyecto educativo – Miniproyecto 6</p>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
