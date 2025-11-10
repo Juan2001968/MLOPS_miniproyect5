@@ -1,0 +1,21 @@
+format: jb-book
+root: intro
+
+parts:
+  - caption: Proyecto
+    chapters:
+      - file: 01_contexto_churn
+      - file: 02_eda
+      - file: 03_preprocesamiento
+      - file: 04_modelado_arboles_gridsearch
+      - file: 05_evaluacion_metricas_clasificacion
+      - file: 06_interpretabilidad
+      - file: 07_fastapi_servicio
+      - file: 08_docker_ci_cd
+      - file: 09_dashboard_dash
+      - file: 10_monitoreo
+
+  - caption: Referencias
+    chapters:
+      - file: references
+

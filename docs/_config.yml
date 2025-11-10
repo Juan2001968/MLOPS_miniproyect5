@@ -1,0 +1,47 @@
+# =======================
+#  Jupyter Book - CONFIG
+# =======================
+title: "Miniproyecto 6 · Telco Churn con Árboles + MLOps"
+author: "Juan Andres Ramos, Mariana Franco y Jeronimo Dominguez"
+logo: assets/figuras/logo.png   # <- opcional. Si no existe, borra esta línea
+only_build_toc_files: true
+
+# No re-ejecutar notebooks al construir (usa las salidas guardadas)
+execute:
+  execute_notebooks: "off"   # "auto" si quieres que los ejecute al build
+  timeout: 120
+
+# Bibliografía (opcional, ya tienes references.bib)
+bibtex_bibfiles:
+  - references.bib
+
+# Extensiones útiles de MyST
+parse:
+  myst_enable_extensions:
+    - colon_fence
+    - deflist
+    - dollarmath
+    - amsmath
+    - html_image
+
+# Botones de repo (ajusta la URL de tu repo)
+repository:
+  url: "https://github.com/Juan2001968/MLOPS_miniproyect5"  # <- pon tu repo real
+  path_to_book: "docs"
+  branch: "main"
+
+html:
+  favicon: assets/figuras/favicon.png   # <- opcional
+  use_repository_button: true
+  use_issues_button: true
+  use_download_button: true
+  extra_navbar: ""
+  extra_footer: |
+    <p> Proyecto educativo – Miniproyecto 6</p>
+
+sphinx:
+  config:
+    html_show_sourcelink: true
+    # Si quieres ocultar números en títulos:
+    # nb_number_source_lines: False
+
