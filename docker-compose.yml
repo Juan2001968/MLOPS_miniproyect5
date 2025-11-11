@@ -1,0 +1,19 @@
+﻿version: "3.8"
+
+services:
+  churn_api:
+    build: .
+    image: churn-api:latest
+    container_name: churn_api
+    ports:
+      - "8000:8000"
+    environment:
+      PROJECT_ROOT: /app
+      MODELS_DIR: /app/models
+      PREPROCESSOR_PATH: /app/models/preprocessor.joblib
+      MODEL_PATH: /app/models/xgb_clf_only.joblib
+      FEATURE_NAMES_PATH: /app/models/feature_names.json
+    # Si prefieres mantener modelos fuera de la imagen:
+    # volumes:
+    #   - ./models:/app/models:ro
+    restart: unless-stopped
