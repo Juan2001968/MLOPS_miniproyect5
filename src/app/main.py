@@ -10,6 +10,8 @@ import numpy as np
 import pandas as pd
 import joblib
 from fastapi import FastAPI, HTTPException
+from src.dashboard.app import create_dash_app
+from fastapi.middleware.wsgi import WSGIMiddleware
 
 # =========================================================
 # Rutas de proyecto y artefactos
@@ -79,6 +81,8 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+dash_app = create_dash_app()
+app.mount("/dash", WSGIMiddleware(dash_app.server))
 # =========================================================
 # Utilidades
 # =========================================================

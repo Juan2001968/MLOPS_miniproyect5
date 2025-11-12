@@ -21,3 +21,5 @@ seaborn==0.13.2
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
 pydantic==2.9.2       # usamos Pydantic v2
+dash==2.16.*
+plotly==5.24.*

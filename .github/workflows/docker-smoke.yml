@@ -1,0 +1,40 @@
+name: Docker Smoke Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+env:
+  IMAGE_REF: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/churn-api:latest
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull image
+        run: docker pull $IMAGE_REF
+
+      - name: Run container
+        run: docker run -d --rm -p 8000:8000 --name churn-smoke $IMAGE_REF
+
+      - name: Wait for service
+        run: |
+          for i in {1..30}; do
+            if curl -sSf http://localhost:8000/health > /dev/null; then
+              echo "Service is up!"
+              exit 0
+            fi
+            echo "Waiting..."
+            sleep 2
+          done
+          echo "Service did not start" && exit 1
+
+      - name: Curl predict (opcional)
+        run: |
+          curl -sSf -X POST "http://localhost:8000/predict"             -H "Content-Type: application/json"             -d '{"gender":"Female","SeniorCitizen":0,"Partner":"Yes","Dependents":"No",
+                 "tenure":5,"PhoneService":"Yes","MultipleLines":"No",
+                 "InternetService":"Fiber optic","OnlineSecurity":"No","OnlineBackup":"No",
+                 "DeviceProtection":"No","TechSupport":"No","StreamingTV":"No",
+                 "StreamingMovies":"No","Contract":"Month-to-month","PaperlessBilling":"Yes",
+                 "PaymentMethod":"Electronic check","MonthlyCharges":70.35,"TotalCharges":351.75}'
