@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '02_eda';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="03_preprocesamiento.html" />
+    <link rel="next" title="3. Preprocesamiento de Datos" href="03_preprocesamiento.html" />
     <link rel="prev" title="1. Contexto del Dataset: Telco Customer Churn" href="01_contexto_churn.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -183,12 +183,10 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_contexto_churn.html">1. Contexto del Dataset: <em>Telco Customer Churn</em></a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#"><strong>2. Análisis Exploratorio de Datos (EDA)</strong></a></li>
-<li class="toctree-l1"><a class="reference internal" href="06_interpretabilidad.html">SECCION 6</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09_dashboard_dash.html">SECCION 9</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Referencias</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="references.html">Referencias</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_preprocesamiento.html"><strong>3. Preprocesamiento de Datos</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_modelado_arboles_gridsearch.html"><strong>4. Modelado</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_evaluacion_metricas_clasificacion.html"><strong>5. Evaluacion de metricas</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_interpretabilidad.html"><strong>6. Interpretabilidad</strong></a></li>
 </ul>
 
     </div>
@@ -385,7 +383,88 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#librerias">Librerías</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-la-base-de-datos"><strong>1. Carga de la Base de Datos</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-la-base-de-datos"><strong>1. Carga de la Base de Datos</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#descarga-y-carga-del-dataset-telco-customer-churn">Descarga y carga del dataset <em>Telco Customer Churn</em></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataframe">Carga del DataFrame</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vista-previa-de-los-datos">Vista previa de los datos</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lectura-del-dataset-y-verificacion"><strong>2. Lectura del Dataset y verificación</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-observada">Salida observada</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limpieza-de-nombres-de-columnas"><strong>3. Limpieza de nombres de columnas</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-salida-df-info">Interpretación de la salida (<code class="docutils literal notranslate"><span class="pre">df.info()</span></code>)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conversion-de-tipos-target-binario-y-particion-de-variables-numericas-vs-categoricas"><strong>4. Conversión de tipos, target binario y partición de variables (numéricas vs. categóricas)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#que-hace-el-codigo">Qué hace el código</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-salida">Interpretación de la salida</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#importancia">Importancia</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conteo-de-valores-faltantes-por-columna"><strong>5. Conteo de valores faltantes por columna</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-del-target-churn-porcentaje-y-conteo-implicaciones-de-desbalance"><strong>6. Distribución del target <code class="docutils literal notranslate"><span class="pre">Churn</span></code> (porcentaje y conteo) + implicaciones de desbalance</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Interpretación de la salida</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-estadistico-numericas-cardinalidad-y-top-frecuencias-categoricas"><strong>7. Resumen estadístico (numéricas) + cardinalidad y top-frecuencias (categóricas)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Interpretación de la salida</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#numericas-describe-t">1) Numéricas (<code class="docutils literal notranslate"><span class="pre">describe().T</span></code>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#categoricas-cardinalidad-y-top-k">2) Categóricas (cardinalidad y top-k)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizacion-univariada-distribuciones-numericas-y-categoricas"><strong>8. Visualización univariada: Distribuciones numéricas y categóricas</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-los-resultados">Interpretación de los resultados</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-numericas">Variables numéricas</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-categoricas-barras">Variables categóricas (barras)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusión</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relacion-de-variables-numericas-con-churn-violines-prueba-de-mannwhitney"><strong>9. Relación de variables numéricas con <code class="docutils literal notranslate"><span class="pre">Churn</span></code>: violines + prueba de Mann–Whitney</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-los-violines">Interpretación de los violines</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-de-mannwhitney">Resultados de Mann–Whitney</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-general">Conclusión general</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prueba-chi-cuadrado-y-barras-apiladas-por-categoria"><strong>10. Prueba Chi-cuadrado y Barras Apiladas por Categoría</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-tabla-chi-cuadrado">Interpretación de la tabla Chi-cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-las-barras-apiladas-proporciones-por-categoria">Interpretación de las barras apiladas (proporciones por categoría)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Conclusión general</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matriz-de-correlacion-y-variables-numericas-mas-relacionadas-con-el-churn"><strong>11. Matriz de Correlación y Variables Numéricas Más Relacionadas con el Churn</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-matriz-de-correlacion">Interpretación de la Matriz de Correlación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-principales">Resultados principales:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Conclusión</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matriz-de-correlacion-mixta-pearson-cramers-v"><strong>12. Matriz de Correlación Mixta (Pearson + Cramér’s V + η)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-matriz-mixta">Interpretación de la matriz mixta</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-fuertes-entre-variables-categoricas">1. Relaciones fuertes entre variables categóricas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-numericas-asociadas-con-servicios">2. Variables numéricas asociadas con servicios</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bloque-con-el-target-churn">3. Bloque con el target (Churn)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-debiles">4. Relaciones débiles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Conclusión General</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pairplot-de-las-principales-variables-numericas-vs-churn"><strong>13: Pairplot de las principales variables numéricas vs <code class="docutils literal notranslate"><span class="pre">Churn</span></code></strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pairplot"><strong>Pairplot</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Conclusión</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-2d-sobre-variables-numericas-y-relacion-con-churn"><strong>14. PCA 2D sobre variables numéricas y relación con <code class="docutils literal notranslate"><span class="pre">Churn</span></code></strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafico-de-pca"><strong>Gráfico de PCA</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones-del-pca">Conclusiones del PCA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteccion-de-outliers-con-iqr-y-z-score"><strong>15.Detección de Outliers con IQR y Z-Score</strong></a></li>
 </ul>
             </nav>
         </div>
@@ -660,6 +739,35 @@ Shape: (7043, 21)
 </div>
 </div>
 </div>
+<section id="descarga-y-carga-del-dataset-telco-customer-churn">
+<h3>Descarga y carga del dataset <em>Telco Customer Churn</em><a class="headerlink" href="#descarga-y-carga-del-dataset-telco-customer-churn" title="Link to this heading">#</a></h3>
+<p>En este bloque se realiza la <strong>descarga automática</strong> del dataset <em>Telco Customer Churn</em> desde <strong>Kaggle</strong> usando la API.</p>
+<section id="carga-del-dataframe">
+<h4>Carga del DataFrame<a class="headerlink" href="#carga-del-dataframe" title="Link to this heading">#</a></h4>
+<p>El dataset se carga correctamente en un <strong>DataFrame de pandas</strong>, con una forma de: (7043, 21)
+Esto significa que contiene <strong>7043 observaciones</strong> (clientes) y <strong>21 columnas</strong>, las cuales representan diferentes características del cliente, servicios contratados y la variable objetivo <code class="docutils literal notranslate"><span class="pre">Churn</span></code> (abandono del servicio).</p>
+</section>
+<section id="vista-previa-de-los-datos">
+<h4>Vista previa de los datos<a class="headerlink" href="#vista-previa-de-los-datos" title="Link to this heading">#</a></h4>
+<p>Se muestran las primeras 5 filas del DataFrame, lo que permite confirmar que los datos se cargaron correctamente y están completos.<br />
+Algunas de las columnas más relevantes son:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">customerID</span></code>: identificador único de cada cliente.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gender</span></code>: género del cliente.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>: indica si el cliente es adulto mayor (1) o no (0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Partner</span></code> y <code class="docutils literal notranslate"><span class="pre">Dependents</span></code>: muestran si el cliente tiene pareja o dependientes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tenure</span></code>: meses que el cliente ha permanecido en la compañía.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PhoneService</span></code>, <code class="docutils literal notranslate"><span class="pre">MultipleLines</span></code>, <code class="docutils literal notranslate"><span class="pre">InternetService</span></code>: servicios que tiene contratados el cliente.</p></li>
+<li><p>Otras variables están relacionadas con seguridad, soporte técnico y métodos de pago.</p></li>
+</ul>
+<p><strong>Conclusión:</strong><br />
+La descarga, lectura y almacenamiento del dataset se completaron exitosamente.<br />
+Los datos están listos para iniciar el <strong>análisis exploratorio (EDA)</strong> y preparar las siguientes fases del flujo <strong>MLOps</strong>, que incluyen limpieza, transformación y modelado predictivo del abandono de clientes (<em>churn</em>).</p>
+</section>
+</section>
+</section>
+<section id="lectura-del-dataset-y-verificacion">
+<h2><strong>2. Lectura del Dataset y verificación</strong><a class="headerlink" href="#lectura-del-dataset-y-verificacion" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Si guardaste parquet/csv en la celda anterior:</span>
@@ -844,6 +952,28 @@ Shape: (7043, 21)
 </table>
 </div></div></div>
 </div>
+<section id="salida-observada">
+<h3>Salida observada<a class="headerlink" href="#salida-observada" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Shape:</span> <span class="pre">(7043,</span> <span class="pre">21)</span></code><br />
+→ <strong>7.043 registros</strong> y <strong>21 columnas</strong>: coincide con el tamaño esperado del dataset de churn.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">df.head()</span></code> muestra columnas clave, confirmando lectura correcta:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">customerID</span></code> (ID único),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gender</span></code>, <code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>, <code class="docutils literal notranslate"><span class="pre">Partner</span></code>, <code class="docutils literal notranslate"><span class="pre">Dependents</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tenure</span></code> (meses en la compañía),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PhoneService</span></code>, <code class="docutils literal notranslate"><span class="pre">MultipleLines</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InternetService</span></code> (p. ej., <code class="docutils literal notranslate"><span class="pre">DSL</span></code>, <code class="docutils literal notranslate"><span class="pre">Fiber</span> <span class="pre">optic</span></code>),</p></li>
+<li><p>y otras de seguridad/respaldo/facturación (no todas visibles en la captura).</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Conclusión</strong></p>
+<p>El flujo está bien armado: intenta Parquet por rendimiento/consistencia y cae a CSV si no existe. Con la forma y la muestra inicial, los datos quedan listos para <strong>EDA</strong> y el pipeline de <strong>preprocesamiento/modelado</strong>.</p>
+</section>
+</section>
+<section id="limpieza-de-nombres-de-columnas">
+<h2><strong>3. Limpieza de nombres de columnas</strong><a class="headerlink" href="#limpieza-de-nombres-de-columnas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Renombra columnas (por si cambiaste el paso anterior)</span>
@@ -893,29 +1023,29 @@ memory usage: 1.1+ MB
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ID_COL</span> <span class="o">=</span> <span class="s2">&quot;customerID&quot;</span> <span class="k">if</span> <span class="s2">&quot;customerID&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="s2">&quot;customerid&quot;</span>
-
-<span class="c1"># Duplicados exactos</span>
-<span class="n">dup_rows</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="n">dup_ids</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">ID_COL</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="k">if</span> <span class="n">ID_COL</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="mi">0</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duplicados exactos (filas): </span><span class="si">{</span><span class="n">dup_rows</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duplicados en ID (</span><span class="si">{</span><span class="n">ID_COL</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">dup_ids</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># (Opcional) Eliminar duplicados de filas</span>
-<span class="c1"># df = df.drop_duplicates().reset_index(drop=True)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Duplicados exactos (filas): 0
-Duplicados en ID (customerID): 0
-</pre></div>
-</div>
-</div>
-</div>
+<section id="interpretacion-de-la-salida-df-info">
+<h3>Interpretación de la salida (<code class="docutils literal notranslate"><span class="pre">df.info()</span></code>)<a class="headerlink" href="#interpretacion-de-la-salida-df-info" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Dimensiones:</strong> <code class="docutils literal notranslate"><span class="pre">RangeIndex:</span> <span class="pre">7043</span> <span class="pre">entries</span></code> → el DataFrame tiene <strong>7.043 filas</strong>.</p></li>
+<li><p><strong>Total de columnas:</strong> <strong>21</strong>.</p></li>
+<li><p><strong>Tipos detectados:</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">float64(2)</span></code> → <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code>, <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">int64(2)</span></code> → <code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>, <code class="docutils literal notranslate"><span class="pre">tenure</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">object(17)</span></code> → resto (categóricas como <code class="docutils literal notranslate"><span class="pre">gender</span></code>, <code class="docutils literal notranslate"><span class="pre">Partner</span></code>, <code class="docutils literal notranslate"><span class="pre">InternetService</span></code>, <code class="docutils literal notranslate"><span class="pre">Churn</span></code>, etc.).</p></li>
+</ul>
+</li>
+<li><p><strong>Valores faltantes:</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> muestra <strong>7032 non-null</strong> (deberían ser 7043) → <strong>11 nulos</strong>. Suele pasar por filas con <code class="docutils literal notranslate"><span class="pre">tenure</span> <span class="pre">=</span> <span class="pre">0</span></code> que llegan vacías en CSV y se convierten en <code class="docutils literal notranslate"><span class="pre">NaN</span></code>.</p></li>
+<li><p>El resto de columnas reporta <strong>7043 non-null</strong> → sin nulos según <code class="docutils literal notranslate"><span class="pre">info()</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="conversion-de-tipos-target-binario-y-particion-de-variables-numericas-vs-categoricas">
+<h2><strong>4. Conversión de tipos, target binario y partición de variables (numéricas vs. categóricas)</strong><a class="headerlink" href="#conversion-de-tipos-target-binario-y-particion-de-variables-numericas-vs-categoricas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convertir TotalCharges a numérico (tiene espacios vacíos)</span>
@@ -948,6 +1078,51 @@ Categóricas: 15 [&#39;gender&#39;, &#39;Partner&#39;, &#39;Dependents&#39;, &#3
 </div>
 </div>
 </div>
+<section id="que-hace-el-codigo">
+<h3>Qué hace el código<a class="headerlink" href="#que-hace-el-codigo" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Convierte <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> a numérico</strong> forzando (<code class="docutils literal notranslate"><span class="pre">errors=&quot;coerce&quot;</span></code>) cualquier cadena vacía a <code class="docutils literal notranslate"><span class="pre">NaN</span></code>.</p>
+<blockquote>
+<div><p>Útil porque en este dataset algunos clientes con <code class="docutils literal notranslate"><span class="pre">tenure=0</span></code> traen <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> vacío.</p>
+</div></blockquote>
+</li>
+<li><p><strong>Crea el <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> binario</strong> a partir de <code class="docutils literal notranslate"><span class="pre">Churn</span></code> mapeando <code class="docutils literal notranslate"><span class="pre">{&quot;Yes&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;No&quot;:</span> <span class="pre">0}</span></code> y casteando a <code class="docutils literal notranslate"><span class="pre">int8</span></code> (eficiente en memoria).</p></li>
+<li><p><strong>Identifica columnas categóricas y numéricas</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cat_cols</span></code> toma las de tipo <code class="docutils literal notranslate"><span class="pre">object</span></code> y opcionalmente <strong>excluye el ID</strong> si existe (<code class="docutils literal notranslate"><span class="pre">ID_COL</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_cols</span></code> toma las de tipo numérico (<code class="docutils literal notranslate"><span class="pre">np.number</span></code>) y <strong>excluye la variable objetivo</strong> (<code class="docutils literal notranslate"><span class="pre">TARGET</span></code>).</p></li>
+<li><p>Se reﬁltran ambas listas para asegurar que <strong>ninguna</strong> contenga el <code class="docutils literal notranslate"><span class="pre">TARGET</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Reporte rápido</strong>: imprime cuántas numéricas/categóricas hay y muestra las primeras de cada lista.</p></li>
+</ul>
+</section>
+<section id="interpretacion-de-la-salida">
+<h3>Interpretación de la salida<a class="headerlink" href="#interpretacion-de-la-salida" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Numéricas: 4</strong> → <code class="docutils literal notranslate"><span class="pre">['SeniorCitizen',</span> <span class="pre">'tenure',</span> <span class="pre">'MonthlyCharges',</span> <span class="pre">'TotalCharges']</span></code></p>
+<blockquote>
+<div><p>Confirma que <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> ya quedó numérica y que <code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>/<code class="docutils literal notranslate"><span class="pre">tenure</span></code> son enteras.</p>
+</div></blockquote>
+</li>
+<li><p><strong>Categóricas: 15</strong> → empiezan por <code class="docutils literal notranslate"><span class="pre">['gender',</span> <span class="pre">'Partner',</span> <span class="pre">'Dependents',</span> <span class="pre">'PhoneService',</span> <span class="pre">'MultipleLines',</span> <span class="pre">'InternetService',</span> <span class="pre">'OnlineSecurity',</span> <span class="pre">...]</span></code></p>
+<blockquote>
+<div><p>Son las que luego irán a <strong>codificación</strong> (One-Hot/Ordinal) en el pipeline.</p>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="importancia">
+<h3>Importancia<a class="headerlink" href="#importancia" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Tener <code class="docutils literal notranslate"><span class="pre">Churn</span></code> como <strong>0/1</strong> simplifica métricas y modelos (Logística, Árboles, SVM, etc.).</p></li>
+<li><p>Separar <strong>numéricas</strong> y <strong>categóricas</strong> desde temprano permite armar un <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> claro y reproducible.</p></li>
+<li><p>El <code class="docutils literal notranslate"><span class="pre">coerce</span></code> en <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> evita errores de parseo y deja listos los <strong>pasos de imputación</strong> (p. ej., mediana para nulos).</p></li>
+</ul>
+</section>
+</section>
+<section id="conteo-de-valores-faltantes-por-columna">
+<h2><strong>5. Conteo de valores faltantes por columna</strong><a class="headerlink" href="#conteo-de-valores-faltantes-por-columna" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Conteo y % de faltantes por columna</span>
@@ -991,6 +1166,16 @@ Categóricas: 15 [&#39;gender&#39;, &#39;Partner&#39;, &#39;Dependents&#39;, &#3
 </table>
 </div></div></div>
 </div>
+<ul class="simple">
+<li><p>Resultado observado:</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> → 11 faltantes (0.16%)</strong></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="distribucion-del-target-churn-porcentaje-y-conteo-implicaciones-de-desbalance">
+<h2><strong>6. Distribución del target <code class="docutils literal notranslate"><span class="pre">Churn</span></code> (porcentaje y conteo) + implicaciones de desbalance</strong><a class="headerlink" href="#distribucion-del-target-churn-porcentaje-y-conteo-implicaciones-de-desbalance" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1018,6 +1203,29 @@ Name: count, dtype: int64
 </div>
 </div>
 </div>
+<p>Este bloque:</p>
+<ul class="simple">
+<li><p>Calcula la <strong>proporción</strong> de cada clase con <code class="docutils literal notranslate"><span class="pre">df[TARGET].value_counts(normalize=True)</span></code>.</p></li>
+<li><p>Renombra las clases a <strong><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">Churn</span></code></strong> (0) y <strong><code class="docutils literal notranslate"><span class="pre">Churn</span></code></strong> (1), multiplica por <strong>100</strong> y grafica un <strong>barras</strong> (<code class="docutils literal notranslate"><span class="pre">kind=&quot;bar&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">figsize=(5,3)</span></code>).</p></li>
+<li><p>Anota etiquetas <strong>%</strong> sobre cada barra para facilitar la lectura.</p></li>
+<li><p>Ajusta el layout, guarda la figura en <code class="docutils literal notranslate"><span class="pre">FIGS/eda_target_balance.png</span></code> (dpi=140) y muestra el gráfico.</p></li>
+<li><p>Finalmente imprime el <strong>conteo absoluto</strong> de clases con <code class="docutils literal notranslate"><span class="pre">df[TARGET].value_counts()</span></code>.</p></li>
+</ul>
+<section id="id1">
+<h3>Interpretación de la salida<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Gráfico</strong>: muestra que ~<strong>73.5%</strong> de los registros son <strong>No Churn</strong> y ~<strong>26.5%</strong> son <strong>Churn</strong>.</p></li>
+<li><p><strong>Conteos</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">(No</span> <span class="pre">Churn)</span></code>: <strong>5,174</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">(Churn)</span></code>: <strong>1,869</strong></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="resumen-estadistico-numericas-cardinalidad-y-top-frecuencias-categoricas">
+<h2><strong>7. Resumen estadístico (numéricas) + cardinalidad y top-frecuencias (categóricas)</strong><a class="headerlink" href="#resumen-estadistico-numericas-cardinalidad-y-top-frecuencias-categoricas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Numéricas</span>
@@ -1216,6 +1424,74 @@ Name: count, dtype: int64
 </table>
 </div></div></div>
 </div>
+<p>Este bloque:</p>
+<ul class="simple">
+<li><p><strong>Numéricas:</strong> <code class="docutils literal notranslate"><span class="pre">df[num_cols].describe().T</span></code> produce conteos, media, desviación estándar y cuantiles (25/50/75%) para cada variable numérica.</p></li>
+<li><p><strong>Categóricas:</strong> define <code class="docutils literal notranslate"><span class="pre">freq_table(s,</span> <span class="pre">k=5)</span></code> que:</p>
+<ul>
+<li><p>calcula <code class="docutils literal notranslate"><span class="pre">value_counts(dropna=False)</span></code>,</p></li>
+<li><p>devuelve la <strong>cardinalidad</strong> (número de categorías distintas) y un diccionario con el <strong>top-k</strong> valores más frecuentes,</p></li>
+<li><p>concatena los resultados para todas las columnas en <code class="docutils literal notranslate"><span class="pre">cat_cols</span></code> y los muestra como tabla.</p></li>
+</ul>
+</li>
+</ul>
+<section id="id2">
+<h3>Interpretación de la salida<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<section id="numericas-describe-t">
+<h4>1) Numéricas (<code class="docutils literal notranslate"><span class="pre">describe().T</span></code>)<a class="headerlink" href="#numericas-describe-t" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>SeniorCitizen</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">count=7043</span></code>, <code class="docutils literal notranslate"><span class="pre">mean≈0.162</span></code>, <code class="docutils literal notranslate"><span class="pre">std≈0.369</span></code>, <code class="docutils literal notranslate"><span class="pre">min=0</span></code>, <code class="docutils literal notranslate"><span class="pre">max=1</span></code> → variable binaria bien leída.</p></li>
+</ul>
+</li>
+<li><p><strong>tenure</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mean≈32.37</span></code> meses, IQR <code class="docutils literal notranslate"><span class="pre">9–55</span></code>, <code class="docutils literal notranslate"><span class="pre">max=72</span></code>. Hay clientes recientes (<code class="docutils literal notranslate"><span class="pre">min=0</span></code>) y de larga data (<code class="docutils literal notranslate"><span class="pre">&gt;60</span></code>).</p></li>
+</ul>
+</li>
+<li><p><strong>MonthlyCharges</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mean≈64.76</span></code>, IQR <code class="docutils literal notranslate"><span class="pre">35.5–89.85</span></code>, <code class="docutils literal notranslate"><span class="pre">max≈118.75</span></code>. Rango coherente con planes/servicios.</p></li>
+</ul>
+</li>
+<li><p><strong>TotalCharges</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">count=7032</span></code> (→ <strong>11 nulos</strong>), <code class="docutils literal notranslate"><span class="pre">median≈1397.5</span></code>, IQR <code class="docutils literal notranslate"><span class="pre">401–3795</span></code>, <code class="docutils literal notranslate"><span class="pre">max≈8684.8</span></code>. Distribución amplia; revisar posibles valores altos (outliers legítimos por alta permanencia/servicios).</p></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<div><p>Nota: el <code class="docutils literal notranslate"><span class="pre">count</span></code> menor en <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> confirma los faltantes detectados antes.</p>
+</div></blockquote>
+</section>
+<section id="categoricas-cardinalidad-y-top-k">
+<h4>2) Categóricas (cardinalidad y top-k)<a class="headerlink" href="#categoricas-cardinalidad-y-top-k" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>Cardinalidades típicas</strong>:</p>
+<ul>
+<li><p>2 niveles: <code class="docutils literal notranslate"><span class="pre">gender</span></code>, <code class="docutils literal notranslate"><span class="pre">Partner</span></code>, <code class="docutils literal notranslate"><span class="pre">Dependents</span></code>, <code class="docutils literal notranslate"><span class="pre">PhoneService</span></code>, <code class="docutils literal notranslate"><span class="pre">PaperlessBilling</span></code>…</p></li>
+<li><p>3 niveles: <code class="docutils literal notranslate"><span class="pre">MultipleLines</span></code> (<code class="docutils literal notranslate"><span class="pre">No</span></code>, <code class="docutils literal notranslate"><span class="pre">Yes</span></code>, <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">phone</span> <span class="pre">service</span></code>), <code class="docutils literal notranslate"><span class="pre">InternetService</span></code> (<code class="docutils literal notranslate"><span class="pre">Fiber</span> <span class="pre">optic</span></code>, <code class="docutils literal notranslate"><span class="pre">DSL</span></code>, <code class="docutils literal notranslate"><span class="pre">No</span></code>), <code class="docutils literal notranslate"><span class="pre">OnlineSecurity/Backup/DeviceProtection/TechSupport/StreamingTV/StreamingMovies</span></code> (cada una con <code class="docutils literal notranslate"><span class="pre">Yes</span></code>, <code class="docutils literal notranslate"><span class="pre">No</span></code>, <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">internet</span> <span class="pre">service</span></code>).</p></li>
+<li><p>3 niveles: <code class="docutils literal notranslate"><span class="pre">Contract</span></code> (<code class="docutils literal notranslate"><span class="pre">Month-to-month</span></code>, <code class="docutils literal notranslate"><span class="pre">Two</span> <span class="pre">year</span></code>, <code class="docutils literal notranslate"><span class="pre">One</span> <span class="pre">year</span></code>).</p></li>
+<li><p>4 niveles: <code class="docutils literal notranslate"><span class="pre">PaymentMethod</span></code> (p. ej., <code class="docutils literal notranslate"><span class="pre">Electronic</span> <span class="pre">check</span></code>, <code class="docutils literal notranslate"><span class="pre">Mailed</span> <span class="pre">check</span></code>, etc.).</p></li>
+</ul>
+</li>
+<li><p><strong>Top-frecuencias destacadas</strong> (muestran la moda de cada variable):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">gender</span></code>: <code class="docutils literal notranslate"><span class="pre">Male</span></code> y <code class="docutils literal notranslate"><span class="pre">Female</span></code> casi balanceados.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PhoneService</span></code>: predominan los <strong>Yes</strong> (más de 6k).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InternetService</span></code>: <strong>Fiber optic</strong> es el más común, seguido de <code class="docutils literal notranslate"><span class="pre">DSL</span></code>; existe la categoría <strong>No</strong>.</p></li>
+<li><p>Servicios adicionales (<code class="docutils literal notranslate"><span class="pre">OnlineSecurity</span></code>, <code class="docutils literal notranslate"><span class="pre">OnlineBackup</span></code>, etc.): la clase <strong>No</strong> domina y aparece la categoría <strong>No internet service</strong> (importante para codificación).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Contract</span></code>: mayoría <strong>Month-to-month</strong> (≈3.8k), menor proporción en contratos de mayor plazo.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PaymentMethod</span></code>: <strong>Electronic check</strong> es la forma más usada.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="visualizacion-univariada-distribuciones-numericas-y-categoricas">
+<h2><strong>8. Visualización univariada: Distribuciones numéricas y categóricas</strong><a class="headerlink" href="#visualizacion-univariada-distribuciones-numericas-y-categoricas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Histogramas/KDE para numéricas</span>
@@ -1264,6 +1540,88 @@ Name: count, dtype: int64
 <img alt="_images/5cb42d702bd77668920839673fd7feb74c229cb52c9aee0f53474e1847f67822.png" src="_images/5cb42d702bd77668920839673fd7feb74c229cb52c9aee0f53474e1847f67822.png" />
 </div>
 </div>
+<section id="interpretacion-de-los-resultados">
+<h3>Interpretación de los resultados<a class="headerlink" href="#interpretacion-de-los-resultados" title="Link to this heading">#</a></h3>
+<section id="variables-numericas">
+<h4>Variables numéricas<a class="headerlink" href="#variables-numericas" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p><strong>SeniorCitizen</strong></p>
+<ul class="simple">
+<li><p>Distribución binaria (0 y 1), con clara mayoría de clientes <strong>no mayores</strong>.</p></li>
+<li><p>Picos definidos: la mayoría son jóvenes, con minoría significativa de adultos mayores.</p></li>
+</ul>
+</li>
+<li><p><strong>tenure (meses de permanencia)</strong></p>
+<ul class="simple">
+<li><p>Distribución <strong>bimodal</strong>:</p>
+<ul>
+<li><p>Gran cantidad de clientes nuevos (<code class="docutils literal notranslate"><span class="pre">tenure</span> <span class="pre">≈</span> <span class="pre">0</span></code>),</p></li>
+<li><p>Otro grupo con larga permanencia (<code class="docutils literal notranslate"><span class="pre">tenure</span> <span class="pre">&gt;</span> <span class="pre">60</span></code>).</p></li>
+</ul>
+</li>
+<li><p>Indica posible patrón de <strong>churn temprano</strong> o <strong>fidelidad alta</strong> en extremos.</p></li>
+</ul>
+</li>
+<li><p><strong>MonthlyCharges (cargo mensual)</strong></p>
+<ul class="simple">
+<li><p>Distribución relativamente amplia, con mayor densidad entre <strong>70 y 100 USD</strong>.</p></li>
+<li><p>Sugiere distintos tipos de planes o servicios contratados.</p></li>
+</ul>
+</li>
+<li><p><strong>TotalCharges (cargo total)</strong></p>
+<ul class="simple">
+<li><p>Distribución <strong>fuertemente sesgada a la derecha</strong>, como era de esperarse:</p>
+<ul>
+<li><p>Clientes nuevos tienen valores bajos,</p></li>
+<li><p>Clientes antiguos acumulan cargos altos.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<div><p>Estas visualizaciones ayudan a detectar outliers, sesgos de distribución y a definir transformaciones (como escalado o log-transformaciones).</p>
+</div></blockquote>
+</section>
+<section id="variables-categoricas-barras">
+<h4>Variables categóricas (barras)<a class="headerlink" href="#variables-categoricas-barras" title="Link to this heading">#</a></h4>
+<ol class="arabic">
+<li><p><strong>gender</strong> → Distribución casi 50/50 entre <em>Male</em> y <em>Female</em>.</p></li>
+<li><p><strong>Partner</strong> → Ligero predominio del <em>No</em> (sin pareja).</p></li>
+<li><p><strong>Dependents</strong> → Mayoría <em>No</em>, pocos con dependientes.</p></li>
+<li><p><strong>PhoneService</strong> → Alta proporción de <em>Yes</em>.</p></li>
+<li><p><strong>MultipleLines</strong> → Predomina <em>No</em>, seguido de <em>Yes</em> y menor número sin servicio telefónico.</p></li>
+<li><p><strong>InternetService</strong> → Más usuarios con <em>Fiber optic</em>, luego <em>DSL</em>, y algunos <em>No</em>.</p></li>
+<li><p><strong>OnlineSecurity / OnlineBackup / DeviceProtection / TechSupport</strong> →<br />
+En todas domina <em>No</em>, seguido de <em>Yes</em>, y presencia notable de <em>No internet service</em>.</p>
+<blockquote>
+<div><p>Muestra que muchos usuarios no tienen servicios adicionales activos.</p>
+</div></blockquote>
+</li>
+<li><p><strong>StreamingTV / StreamingMovies</strong> → Distribución equilibrada entre <em>Yes</em> y <em>No</em>, con menor grupo <em>No internet service</em>.</p></li>
+<li><p><strong>Contract</strong> → Predominio de <em>Month-to-month</em>; contratos <em>Two year</em> y <em>One year</em> son menos frecuentes.</p></li>
+<li><p><strong>PaperlessBilling</strong> → Mayoría <em>Yes</em>, coherente con la digitalización de cobros.</p></li>
+<li><p><strong>PaymentMethod</strong> → Destaca <em>Electronic check</em> como principal método, seguido por <em>Mailed check</em> y transferencias automáticas.</p></li>
+</ol>
+</section>
+</section>
+<section id="conclusion">
+<h3>Conclusión<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Variables numéricas:</strong> se observa alta concentración en valores bajos y asimetrías (sesgo positivo en <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> y <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code>).</p></li>
+<li><p><strong>Variables categóricas:</strong> predominan servicios básicos y contratos cortos (<em>Month-to-month</em>), lo cual puede estar correlacionado con <strong>mayor churn</strong>.</p></li>
+<li><p>Estas visualizaciones constituyen la base del <strong>EDA univariado</strong>, necesarias para:</p>
+<ul>
+<li><p>comprender la estructura general del dataset,</p></li>
+<li><p>decidir transformaciones y normalizaciones,</p></li>
+<li><p>preparar la siguiente fase de análisis bivariado con <code class="docutils literal notranslate"><span class="pre">Churn</span></code> como variable objetivo.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="relacion-de-variables-numericas-con-churn-violines-prueba-de-mannwhitney">
+<h2><strong>9. Relación de variables numéricas con <code class="docutils literal notranslate"><span class="pre">Churn</span></code>: violines + prueba de Mann–Whitney</strong><a class="headerlink" href="#relacion-de-variables-numericas-con-churn-violines-prueba-de-mannwhitney" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Boxplot/violin por target</span>
@@ -1344,6 +1702,75 @@ Name: count, dtype: int64
 </table>
 </div></div></div>
 </div>
+<section id="interpretacion-de-los-violines">
+<h3>Interpretación de los violines<a class="headerlink" href="#interpretacion-de-los-violines" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>SeniorCitizen vs Churn</strong></p>
+<ul class="simple">
+<li><p>El violín de <code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">1</span></code> muestra <strong>mayor masa en 1</strong> (adultos mayores).</p></li>
+<li><p>Indica que los clientes senior tienden a <strong>churnear más</strong> que los no-senior.</p></li>
+</ul>
+</li>
+<li><p><strong>tenure vs Churn</strong></p>
+<ul class="simple">
+<li><p>Para <code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">0</span></code>, el violín se extiende a valores <strong>altos de tenure</strong> (clientes fieles de muchos meses).</p></li>
+<li><p>Para <code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">1</span></code>, la distribución está más concentrada en <strong>tenures bajos</strong>.</p></li>
+<li><p>Sugiere que quienes abandonan suelen llevar <strong>poco tiempo</strong> con la compañía.</p></li>
+</ul>
+</li>
+<li><p><strong>MonthlyCharges vs Churn</strong></p>
+<ul class="simple">
+<li><p>En <code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">1</span></code>, la densidad se desplaza hacia <strong>cargos mensuales más altos</strong>.</p></li>
+<li><p>Los clientes que pagan más al mes parecen estar <strong>más insatisfechos</strong> o más propensos a irse.</p></li>
+</ul>
+</li>
+<li><p><strong>TotalCharges vs Churn</strong></p>
+<ul class="simple">
+<li><p>Ambos grupos tienen colas largas, pero:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">0</span></code> muestra más clientes con <strong>TotalCharges muy altos</strong> (lógica: larga permanencia).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">1</span></code> está más concentrado en valores <strong>bajos/medios</strong>.</p></li>
+</ul>
+</li>
+<li><p>Refuerza la idea de que el churn ocurre más en los primeros periodos del ciclo de vida.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="resultados-de-mannwhitney">
+<h3>Resultados de Mann–Whitney<a class="headerlink" href="#resultados-de-mannwhitney" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Todos los <strong>p-values son extremadamente pequeños</strong> (≪ 0.05).</p></li>
+<li><p>Conclusión estadística:</p>
+<ul>
+<li><p>Para todas las variables numéricas (<code class="docutils literal notranslate"><span class="pre">tenure</span></code>, <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code>, <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code>, <code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>), <strong>rechazamos la hipótesis nula</strong> de que las distribuciones son iguales entre <code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">0</span></code> y <code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">1</span></code>.</p></li>
+<li><p>Es decir, estas variables <strong>sí tienen diferencias significativas</strong> entre clientes que se quedan y los que abandonan.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="conclusion-general">
+<h3>Conclusión general<a class="headerlink" href="#conclusion-general" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Los violines + Mann–Whitney confirman que las cuatro variables numéricas son <strong>fuertes candidatas</strong> para el modelo de churn:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">tenure</span></code> y <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> capturan el ciclo de vida del cliente,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> refleja la carga económica,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code> aporta información demográfica.</p></li>
+</ul>
+</li>
+<li><p>En la fase de modelado, vale la pena:</p>
+<ul>
+<li><p>Incluirlas todas,</p></li>
+<li><p>Evaluar posibles transformaciones (por ejemplo, escalado),</p></li>
+<li><p>Explorar interacciones con las variables categóricas y con el tipo de contrato.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="prueba-chi-cuadrado-y-barras-apiladas-por-categoria">
+<h2><strong>10. Prueba Chi-cuadrado y Barras Apiladas por Categoría</strong><a class="headerlink" href="#prueba-chi-cuadrado-y-barras-apiladas-por-categoria" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chi_rows</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1486,6 +1913,74 @@ Name: count, dtype: int64
 <img alt="_images/1dede347fb6f9944f264ab9e0ee2341dd029935fe4e34b36780ec654ddd03df8.png" src="_images/1dede347fb6f9944f264ab9e0ee2341dd029935fe4e34b36780ec654ddd03df8.png" />
 </div>
 </div>
+<section id="interpretacion-de-la-tabla-chi-cuadrado">
+<h3>Interpretación de la tabla Chi-cuadrado<a class="headerlink" href="#interpretacion-de-la-tabla-chi-cuadrado" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>La prueba Chi-cuadrado evalúa si <strong>existe relación</strong> entre cada variable categórica y el target <strong>Churn</strong>.</p></li>
+<li><p>Un <strong>p-value &lt; 0.05</strong> indica que la variable tiene una relación significativa con el churn.</p></li>
+<li><p>En los resultados observados:</p>
+<ul>
+<li><p><strong>Contract</strong> presenta el chi² más alto → es una de las variables más influyentes.</p></li>
+<li><p><strong>OnlineSecurity</strong>, <strong>TechSupport</strong>, <strong>InternetService</strong>, <strong>PaymentMethod</strong>, <strong>OnlineBackup</strong>, <strong>DeviceProtection</strong>, <strong>StreamingMovies</strong>, <strong>StreamingTV</strong>, <strong>PaperlessBilling</strong> también muestran <strong>p-values extremadamente pequeños</strong>, indicando fuerte asociación con churn.</p></li>
+<li><p>Esto implica que <strong>la distribución de churn cambia claramente entre las categorías</strong> de estas variables.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="interpretacion-de-las-barras-apiladas-proporciones-por-categoria">
+<h3>Interpretación de las barras apiladas (proporciones por categoría)<a class="headerlink" href="#interpretacion-de-las-barras-apiladas-proporciones-por-categoria" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Cada gráfico muestra la <strong>proporción de churn (1)</strong> y <strong>no-churn (0)</strong> dentro de cada categoría.</p></li>
+<li><p>Patrones importantes:</p>
+<ul>
+<li><p><strong>Contract</strong></p>
+<ul>
+<li><p><em>Month-to-month</em> tiene una proporción de churn notablemente más alta.</p></li>
+<li><p><em>One year</em> y <em>Two year</em> casi no presentan churn → contratos largos retienen clientes.</p></li>
+</ul>
+</li>
+<li><p><strong>InternetService</strong></p>
+<ul>
+<li><p><em>Fiber optic</em> tiene más churn.</p></li>
+<li><p><em>No internet service</em> casi no presenta churn.</p></li>
+</ul>
+</li>
+<li><p><strong>OnlineSecurity, TechSupport, OnlineBackup, DeviceProtection</strong></p>
+<ul>
+<li><p>Cuando el cliente no tiene estos servicios, la proporción de churn es mayor.</p></li>
+<li><p>La ausencia de servicios adicionales parece relacionarse con mayor abandono.</p></li>
+</ul>
+</li>
+<li><p><strong>PaymentMethod</strong></p>
+<ul>
+<li><p><em>Electronic check</em> muestra un churn mucho más alto que los métodos automáticos.</p></li>
+</ul>
+</li>
+<li><p><strong>PaperlessBilling</strong></p>
+<ul>
+<li><p>Los usuarios con facturación sin papel tienden a abandonar más.</p></li>
+</ul>
+</li>
+<li><p><strong>Variables como gender</strong></p>
+<ul>
+<li><p>No muestran cambios claros entre categorías → baja relevancia.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id3">
+<h3>Conclusión general<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>La mayoría de las variables categóricas del servicio sí presentan patrones claros asociados al churn.</p></li>
+<li><p>Variables relacionadas con <strong>contrato</strong>, <strong>seguridad</strong>, <strong>servicios adicionales</strong>, <strong>método de pago</strong> y <strong>tipo de internet</strong> son especialmente importantes.</p></li>
+<li><p>Este análisis confirma que estas columnas deben ser consideradas como <strong>predictoras clave</strong> para el modelo de clasificación.</p></li>
+</ul>
+</section>
+</section>
+<section id="matriz-de-correlacion-y-variables-numericas-mas-relacionadas-con-el-churn">
+<h2><strong>11. Matriz de Correlación y Variables Numéricas Más Relacionadas con el Churn</strong><a class="headerlink" href="#matriz-de-correlacion-y-variables-numericas-mas-relacionadas-con-el-churn" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">corr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">num_cols</span> <span class="o">+</span> <span class="p">[</span><span class="n">TARGET</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">numeric_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1513,6 +2008,42 @@ Name: Churn, dtype: float64
 </div>
 </div>
 </div>
+<section id="interpretacion-de-la-matriz-de-correlacion">
+<h3>Interpretación de la Matriz de Correlación<a class="headerlink" href="#interpretacion-de-la-matriz-de-correlacion" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>La matriz muestra cómo se relaciona cada variable numérica con las demás, incluyendo el target.</p></li>
+<li><p>Los colores más intensos indican correlaciones fuertes (positivas o negativas).</p></li>
+<li><p>Las correlaciones con el target <code class="docutils literal notranslate"><span class="pre">Churn</span></code> son moderadas pero informativas.</p></li>
+</ul>
+</section>
+<section id="resultados-principales">
+<h3>Resultados principales:<a class="headerlink" href="#resultados-principales" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>tenure (0.35)</strong>:</p>
+<ul>
+<li><p>La correlación negativa sugiere que a menor tiempo de permanencia, mayor probabilidad de churn.</p></li>
+<li><p>Es la variable numérica más relevante.</p></li>
+</ul>
+</li>
+<li><p><strong>TotalCharges (0.20)</strong> y <strong>MonthlyCharges (0.19)</strong>:</p>
+<ul>
+<li><p>Ambos muestran correlaciones bajas pero significativas.</p></li>
+<li><p>Clientes con cargos altos tienden a abandonar más.</p></li>
+</ul>
+</li>
+<li><p><strong>SeniorCitizen (0.15)</strong>:</p>
+<ul>
+<li><p>Correlación baja pero notable.</p></li>
+<li><p>Personas mayores presentan una ligera tendencia a abandonar más.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="id4">
+<h2>Conclusión<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>Aunque las variables numéricas no tienen correlaciones extremadamente altas con el churn, sí aportan información relevante.<br />
+Especialmente <strong>tenure</strong>, que destaca claramente como el predictor numérico más importante.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ======= FIX ROBUSTO =======</span>
@@ -1620,6 +2151,9 @@ Name: Churn, dtype: float64
 </div>
 </div>
 </div>
+</section>
+<section id="matriz-de-correlacion-mixta-pearson-cramers-v">
+<h2><strong>12. Matriz de Correlación Mixta (Pearson + Cramér’s V + η)</strong><a class="headerlink" href="#matriz-de-correlacion-mixta-pearson-cramers-v" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="n">mixed_corr_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">num_cols</span><span class="o">=</span><span class="n">num_cols</span><span class="p">,</span> <span class="n">cat_cols</span><span class="o">=</span><span class="n">cat_cols</span><span class="p">,</span>
@@ -1638,6 +2172,70 @@ Name: Churn, dtype: float64
 <img alt="_images/c95f36e366a861664732f0cf1b8ce43e8acd4df57d3d56c283870966e5620005.png" src="_images/c95f36e366a861664732f0cf1b8ce43e8acd4df57d3d56c283870966e5620005.png" />
 </div>
 </div>
+<section id="interpretacion-de-la-matriz-mixta">
+<h3>Interpretación de la matriz mixta<a class="headerlink" href="#interpretacion-de-la-matriz-mixta" title="Link to this heading">#</a></h3>
+</section>
+<section id="relaciones-fuertes-entre-variables-categoricas">
+<h3>1. Relaciones fuertes entre variables categóricas<a class="headerlink" href="#relaciones-fuertes-entre-variables-categoricas" title="Link to this heading">#</a></h3>
+<p>Se observan bloques intensos entre:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">InternetService</span></code>, <code class="docutils literal notranslate"><span class="pre">OnlineSecurity</span></code>, <code class="docutils literal notranslate"><span class="pre">TechSupport</span></code>, <code class="docutils literal notranslate"><span class="pre">OnlineBackup</span></code>,<br />
+<code class="docutils literal notranslate"><span class="pre">DeviceProtection</span></code>, <code class="docutils literal notranslate"><span class="pre">StreamingTV</span></code>, <code class="docutils literal notranslate"><span class="pre">StreamingMovies</span></code>, <code class="docutils literal notranslate"><span class="pre">Contract</span></code>.</p></li>
+</ul>
+<p>Estas variables muestran <strong>dependencia entre sí</strong>, debido a que muchas pertenecen a servicios complementarios (internet + seguridad + soporte + entretenimiento).</p>
+</section>
+<section id="variables-numericas-asociadas-con-servicios">
+<h3>2. Variables numéricas asociadas con servicios<a class="headerlink" href="#variables-numericas-asociadas-con-servicios" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> y <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> correlacionan de forma clara con casi todos los servicios.<br />
+→ Tiene sentido: más servicios contratados = mayor factura.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tenure</span></code> también muestra relaciones inversas con algunas categorías, lo que sugiere que:
+→ clientes con contratos más largos tienden a tener más servicios y menor churn.</p></li>
+</ul>
+</section>
+<section id="bloque-con-el-target-churn">
+<h3>3. Bloque con el target (Churn)<a class="headerlink" href="#bloque-con-el-target-churn" title="Link to this heading">#</a></h3>
+<p>Aunque el gráfico no muestra explícitamente la columna <code class="docutils literal notranslate"><span class="pre">Churn</span></code> (dependiendo de la función), el comportamiento general indica:</p>
+<ul class="simple">
+<li><p>El churn está <strong>más relacionado</strong> con:</p>
+<ul>
+<li><p>tipo de contrato (<strong>Contract</strong>)</p></li>
+<li><p>tipo de servicio de internet (<strong>InternetService</strong>)</p></li>
+<li><p>servicios adicionales (<strong>OnlineSecurity, OnlineBackup, TechSupport, DeviceProtection</strong>)</p></li>
+<li><p>método de pago (<strong>PaymentMethod</strong>)</p></li>
+<li><p>facturación electrónica (<strong>PaperlessBilling</strong>)</p></li>
+</ul>
+</li>
+</ul>
+<p>Estas coincidencias corroboran lo visto anteriormente en:</p>
+<ul class="simple">
+<li><p>Chi-cuadrado</p></li>
+<li><p>Barras apiladas</p></li>
+<li><p>Violin plots</p></li>
+</ul>
+</section>
+<section id="relaciones-debiles">
+<h3>4. Relaciones débiles<a class="headerlink" href="#relaciones-debiles" title="Link to this heading">#</a></h3>
+<p>Variables como:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gender</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PhoneService</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Dependents</span></code>
+muestran muy poca asociación con el resto de columnas.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>Conclusión General<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>La matriz mixta permite ver que:</p>
+<ul class="simple">
+<li><p>Los servicios contratados forman un <strong>clúster altamente correlacionado</strong>.</p></li>
+<li><p>El churn está influenciado principalmente por el <strong>tipo de servicio</strong>, <strong>método de pago</strong>, <strong>seguridad</strong> y <strong>duración del contrato</strong>.</p></li>
+<li><p>Variables como <code class="docutils literal notranslate"><span class="pre">tenure</span></code>, <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> y <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> refuerzan estos patrones.</p></li>
+</ul>
+</section>
+</section>
+<section id="pairplot-de-las-principales-variables-numericas-vs-churn">
+<h2><strong>13: Pairplot de las principales variables numéricas vs <code class="docutils literal notranslate"><span class="pre">Churn</span></code></strong><a class="headerlink" href="#pairplot-de-las-principales-variables-numericas-vs-churn" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ========= Pairplot con top-k numéricas =========</span>
@@ -1660,6 +2258,74 @@ Name: Churn, dtype: float64
 <img alt="_images/e3fdea6bf841a765aa87fd575516cbd6d777809414eb7bfac7864d144f30a232.png" src="_images/e3fdea6bf841a765aa87fd575516cbd6d777809414eb7bfac7864d144f30a232.png" />
 </div>
 </div>
+<section id="pairplot">
+<h3><strong>Pairplot</strong><a class="headerlink" href="#pairplot" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Diagonal (histogramas de cada variable)</strong></p>
+<ul class="simple">
+<li><p>Describe la <strong>distribución marginal</strong> de cada variable:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">tenure</span></code>: muchos clientes con pocos meses de permanencia.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code>: concentración en valores intermedios-altos.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code>: sesgo fuerte hacia valores bajos, cola larga.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>: variable binaria (picos en 0 y 1).</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">tenure</span></code> vs <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code></strong></p>
+<ul class="simple">
+<li><p>Nube casi lineal ascendente: a mayor <code class="docutils literal notranslate"><span class="pre">tenure</span></code>, mayor <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code>.</p></li>
+<li><p>Los puntos naranjas (churn=1) se acumulan en la parte de <strong>tenure bajo</strong> y <strong>TotalCharges bajos/medios</strong>.</p></li>
+</ul>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">tenure</span></code> vs <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code></strong></p>
+<ul class="simple">
+<li><p>No hay una relación lineal muy clara, pero:</p>
+<ul>
+<li><p>Clientes de <strong>poco tenure</strong> con <strong>MonthlyCharges relativamente altos</strong> muestran más puntos de churn (naranja).</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> vs <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code></strong></p>
+<ul class="simple">
+<li><p>Para un mismo cargo mensual, el <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> aumenta con el tiempo (tenure).</p></li>
+<li><p>Los casos de churn tienden a tener <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> menores (clientes que se fueron relativamente pronto).</p></li>
+</ul>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code> vs las demás</strong></p>
+<ul class="simple">
+<li><p>Se ven dos bandas horizontales (0 y 1).</p></li>
+<li><p>La banda <code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span> <span class="pre">=</span> <span class="pre">1</span></code> tiene proporcionalmente más puntos naranjas → adultos mayores algo más propensos a abandonar.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="id6">
+<h3>Conclusión<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>El pairplot confirma visualmente que las variables:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">tenure</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>
+están <strong>relacionadas con el churn</strong>, aunque de forma no necesariamente lineal.</p></li>
+</ul>
+</li>
+<li><p>Patrones clave:</p>
+<ul>
+<li><p>Clientes con <strong>poco tiempo en la empresa</strong> y <strong>cargos totales bajos/medios</strong> son los que más churn presentan.</p></li>
+<li><p>Cargos mensuales altos parecen asociarse con mayor probabilidad de abandono.</p></li>
+<li><p>Los adultos mayores contribuyen ligeramente más al churn.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="pca-2d-sobre-variables-numericas-y-relacion-con-churn">
+<h2><strong>14. PCA 2D sobre variables numéricas y relación con <code class="docutils literal notranslate"><span class="pre">Churn</span></code></strong><a class="headerlink" href="#pca-2d-sobre-variables-numericas-y-relacion-con-churn" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ========= PCA 2D sobre numéricas =========</span>
@@ -1691,6 +2357,50 @@ Name: Churn, dtype: float64
 <img alt="_images/80c25b0617da286fd6289f05ed201b9fd840703af932a84fedf93e3f100fe821.png" src="_images/80c25b0617da286fd6289f05ed201b9fd840703af932a84fedf93e3f100fe821.png" />
 </div>
 </div>
+<section id="grafico-de-pca">
+<h3><strong>Gráfico de PCA</strong><a class="headerlink" href="#grafico-de-pca" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Cada punto es un cliente proyectado en el plano (<code class="docutils literal notranslate"><span class="pre">PC1</span></code>, <code class="docutils literal notranslate"><span class="pre">PC2</span></code>).</p></li>
+<li><p>Puntos cercanos tienen <strong>perfiles numéricos similares</strong> (en <code class="docutils literal notranslate"><span class="pre">tenure</span></code>, <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code>, <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code>, <code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>, etc.).</p></li>
+<li><p>El gráfico muestra dos “bandas” o regiones principales:</p>
+<ul>
+<li><p>Una zona inferior (PC2 más baja).</p></li>
+<li><p>Otra zona superior (PC2 más alta).</p></li>
+</ul>
+</li>
+<li><p>Los colores (0 / 1) están <strong>mezclados</strong>, pero:</p>
+<ul>
+<li><p>Se ve una ligera concentración de puntos naranjas (churn=1) en ciertas zonas del plano, lo que indica que la combinación lineal de las variables numéricas captura algo de la señal de churn.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="conclusiones-del-pca">
+<h3>Conclusiones del PCA<a class="headerlink" href="#conclusiones-del-pca" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Las dos primeras componentes principales explican <strong>≈ 81.6% de la variabilidad</strong> de todas las variables numéricas → la estructura numérica del dataset queda bastante bien resumida en 2D.</p></li>
+<li><p>Sin embargo, las clases <code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">0</span></code> y <code class="docutils literal notranslate"><span class="pre">Churn</span> <span class="pre">=</span> <span class="pre">1</span></code> <strong>no quedan totalmente separadas</strong>:</p>
+<ul>
+<li><p>Hay solapamiento considerable entre ambas.</p></li>
+<li><p>Esto sugiere que:</p>
+<ul>
+<li><p>Las variables numéricas por sí solas <strong>no son suficientes</strong> para separar perfectamente el churn.</p></li>
+<li><p>Será importante incorporar también <strong>variables categóricas</strong> y modelos más flexibles (no solo lineales) para capturar mejor la frontera entre clases.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>El PCA es útil como herramienta de <strong>visualización y diagnóstico</strong>:</p>
+<ul>
+<li><p>Permite detectar posibles grupos o patrones globales.</p></li>
+<li><p>Ayuda a verificar si hay outliers extremos o estructuras raras en los datos numéricos.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="deteccion-de-outliers-con-iqr-y-z-score">
+<h2><strong>15.Detección de Outliers con IQR y Z-Score</strong><a class="headerlink" href="#deteccion-de-outliers-con-iqr-y-z-score" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># IQR</span>
@@ -1730,67 +2440,14 @@ Name: outliers_Z3, dtype: int64
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resumen</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;filas&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)],</span>
-    <span class="s2">&quot;columnas&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
-    <span class="s2">&quot;faltantes_%_max&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">],</span>
-    <span class="s2">&quot;duplicados_filas&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()],</span>
-    <span class="s2">&quot;duplicados_id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">ID_COL</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()]</span> <span class="k">if</span> <span class="n">ID_COL</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">else</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
-    <span class="s2">&quot;target_ratio_%_churn&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">],</span>
-    <span class="s2">&quot;num_vars&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">num_cols</span><span class="p">)],</span>
-    <span class="s2">&quot;cat_vars&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">cat_cols</span><span class="p">)],</span>
-<span class="p">}</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">resumen</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>filas</th>
-      <th>columnas</th>
-      <th>faltantes_%_max</th>
-      <th>duplicados_filas</th>
-      <th>duplicados_id</th>
-      <th>target_ratio_%_churn</th>
-      <th>num_vars</th>
-      <th>cat_vars</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>7043</td>
-      <td>21</td>
-      <td>0.156183</td>
-      <td>0</td>
-      <td>0</td>
-      <td>26.536987</td>
-      <td>4</td>
-      <td>15</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
+<p><strong>La única variable con outliers según IQR es <code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code></strong>, porque:</p>
+<ul class="simple">
+<li><p>No es una variable continua.</p></li>
+<li><p>Solo toma valores 0 y 1.</p></li>
+<li><p>La fórmula del IQR considera ambos como outliers por distribución discreta.</p></li>
+</ul>
+<p><strong>Conclusión:</strong><br />
+Los outliers aquí <strong>no son reales</strong>, sino un efecto esperado en variables binarias.</p>
 </section>
 </section>
 
@@ -1838,7 +2495,7 @@ Name: outliers_Z3, dtype: int64
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title"><strong>3. Preprocesamiento de Datos</strong></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1859,7 +2516,88 @@ Name: outliers_Z3, dtype: int64
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#librerias">Librerías</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-la-base-de-datos"><strong>1. Carga de la Base de Datos</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-la-base-de-datos"><strong>1. Carga de la Base de Datos</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#descarga-y-carga-del-dataset-telco-customer-churn">Descarga y carga del dataset <em>Telco Customer Churn</em></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataframe">Carga del DataFrame</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vista-previa-de-los-datos">Vista previa de los datos</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lectura-del-dataset-y-verificacion"><strong>2. Lectura del Dataset y verificación</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#salida-observada">Salida observada</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limpieza-de-nombres-de-columnas"><strong>3. Limpieza de nombres de columnas</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-salida-df-info">Interpretación de la salida (<code class="docutils literal notranslate"><span class="pre">df.info()</span></code>)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conversion-de-tipos-target-binario-y-particion-de-variables-numericas-vs-categoricas"><strong>4. Conversión de tipos, target binario y partición de variables (numéricas vs. categóricas)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#que-hace-el-codigo">Qué hace el código</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-salida">Interpretación de la salida</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#importancia">Importancia</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conteo-de-valores-faltantes-por-columna"><strong>5. Conteo de valores faltantes por columna</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-del-target-churn-porcentaje-y-conteo-implicaciones-de-desbalance"><strong>6. Distribución del target <code class="docutils literal notranslate"><span class="pre">Churn</span></code> (porcentaje y conteo) + implicaciones de desbalance</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Interpretación de la salida</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-estadistico-numericas-cardinalidad-y-top-frecuencias-categoricas"><strong>7. Resumen estadístico (numéricas) + cardinalidad y top-frecuencias (categóricas)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Interpretación de la salida</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#numericas-describe-t">1) Numéricas (<code class="docutils literal notranslate"><span class="pre">describe().T</span></code>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#categoricas-cardinalidad-y-top-k">2) Categóricas (cardinalidad y top-k)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizacion-univariada-distribuciones-numericas-y-categoricas"><strong>8. Visualización univariada: Distribuciones numéricas y categóricas</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-los-resultados">Interpretación de los resultados</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-numericas">Variables numéricas</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-categoricas-barras">Variables categóricas (barras)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusión</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relacion-de-variables-numericas-con-churn-violines-prueba-de-mannwhitney"><strong>9. Relación de variables numéricas con <code class="docutils literal notranslate"><span class="pre">Churn</span></code>: violines + prueba de Mann–Whitney</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-los-violines">Interpretación de los violines</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-de-mannwhitney">Resultados de Mann–Whitney</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-general">Conclusión general</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prueba-chi-cuadrado-y-barras-apiladas-por-categoria"><strong>10. Prueba Chi-cuadrado y Barras Apiladas por Categoría</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-tabla-chi-cuadrado">Interpretación de la tabla Chi-cuadrado</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-las-barras-apiladas-proporciones-por-categoria">Interpretación de las barras apiladas (proporciones por categoría)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Conclusión general</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matriz-de-correlacion-y-variables-numericas-mas-relacionadas-con-el-churn"><strong>11. Matriz de Correlación y Variables Numéricas Más Relacionadas con el Churn</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-matriz-de-correlacion">Interpretación de la Matriz de Correlación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-principales">Resultados principales:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Conclusión</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matriz-de-correlacion-mixta-pearson-cramers-v"><strong>12. Matriz de Correlación Mixta (Pearson + Cramér’s V + η)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-la-matriz-mixta">Interpretación de la matriz mixta</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-fuertes-entre-variables-categoricas">1. Relaciones fuertes entre variables categóricas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-numericas-asociadas-con-servicios">2. Variables numéricas asociadas con servicios</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bloque-con-el-target-churn">3. Bloque con el target (Churn)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relaciones-debiles">4. Relaciones débiles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Conclusión General</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pairplot-de-las-principales-variables-numericas-vs-churn"><strong>13: Pairplot de las principales variables numéricas vs <code class="docutils literal notranslate"><span class="pre">Churn</span></code></strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pairplot"><strong>Pairplot</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Conclusión</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pca-2d-sobre-variables-numericas-y-relacion-con-churn"><strong>14. PCA 2D sobre variables numéricas y relación con <code class="docutils literal notranslate"><span class="pre">Churn</span></code></strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafico-de-pca"><strong>Gráfico de PCA</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones-del-pca">Conclusiones del PCA</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteccion-de-outliers-con-iqr-y-z-score"><strong>15.Detección de Outliers con IQR y Z-Score</strong></a></li>
 </ul>
   </nav></div>
 

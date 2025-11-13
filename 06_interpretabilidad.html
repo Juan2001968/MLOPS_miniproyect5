@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>SECCION 6 &#8212; Miniproyecto 6 · Telco Churn con Árboles + MLOps</title>
+    <title>6. Interpretabilidad &#8212; Miniproyecto 6 · Telco Churn con Árboles + MLOps</title>
   
   
   
@@ -60,8 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '06_interpretabilidad';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="07_fastapi_servicio.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="05_evaluacion_metricas_clasificacion.html" />
+    <link rel="prev" title="5. Evaluacion de metricas" href="05_evaluacion_metricas_clasificacion.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -183,12 +182,10 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_contexto_churn.html">1. Contexto del Dataset: <em>Telco Customer Churn</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_eda.html"><strong>2. Análisis Exploratorio de Datos (EDA)</strong></a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">SECCION 6</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09_dashboard_dash.html">SECCION 9</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Referencias</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="references.html">Referencias</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_preprocesamiento.html"><strong>3. Preprocesamiento de Datos</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_modelado_arboles_gridsearch.html"><strong>4. Modelado</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_evaluacion_metricas_clasificacion.html"><strong>5. Evaluacion de metricas</strong></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><strong>6. Interpretabilidad</strong></a></li>
 </ul>
 
     </div>
@@ -372,7 +369,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>SECCION 6</h1>
+    <h1>6. Interpretabilidad</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -386,8 +383,382 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="seccion-6">
-<h1>SECCION 6<a class="headerlink" href="#seccion-6" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="interpretabilidad">
+<h1><strong>6. Interpretabilidad</strong><a class="headerlink" href="#interpretabilidad" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+
+<span class="c1"># Detecta automáticamente la carpeta &#39;models&#39; subiendo niveles si es necesario</span>
+<span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;models&quot;</span><span class="p">),</span>
+    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../models&quot;</span><span class="p">),</span>
+    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../../models&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">MODELS</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="n">MODELS</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">break</span>
+
+<span class="k">if</span> <span class="n">MODELS</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;No encontré la carpeta &#39;models&#39; en: &quot;</span> <span class="o">+</span>
+                            <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usando carpeta models:&quot;</span><span class="p">,</span> <span class="n">MODELS</span><span class="p">)</span>
+
+<span class="c1"># Carga de artefactos</span>
+<span class="n">model_path</span> <span class="o">=</span> <span class="n">MODELS</span> <span class="o">/</span> <span class="s2">&quot;xgb_best.joblib&quot;</span>
+<span class="n">prep_path</span>  <span class="o">=</span> <span class="n">MODELS</span> <span class="o">/</span> <span class="s2">&quot;preprocessor.joblib&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model path:&quot;</span><span class="p">,</span> <span class="n">model_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Preprocessor path:&quot;</span><span class="p">,</span> <span class="n">prep_path</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+<span class="n">preprocessor</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">prep_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Artefactos cargados.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Usando carpeta models: C:\Users\juana\MLOPS\miniproyecto6\models
+Model path: C:\Users\juana\MLOPS\miniproyecto6\models\xgb_best.joblib
+Preprocessor path: C:\Users\juana\MLOPS\miniproyecto6\models\preprocessor.joblib
+✓ Artefactos cargados.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+
+<span class="c1"># --- Detectar si el modelo es un Pipeline y extraer el clasificador final ---</span>
+<span class="n">is_pipeline</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">)</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">is_pipeline</span> <span class="k">else</span> <span class="n">model</span>  <span class="c1"># último step del pipeline o el modelo directo</span>
+
+<span class="c1"># -------------------------------------------------------------------</span>
+<span class="c1"># 5) Métricas rápidas para comprobar consistencia (según sea pipeline o no)</span>
+<span class="c1"># -------------------------------------------------------------------</span>
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;predict_proba&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">is_pipeline</span><span class="p">:</span>
+        <span class="c1"># El pipeline ya contiene el preprocessor, pásale X crudo (columnas originales)</span>
+        <span class="n">y_prob</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Modelo &quot;puro&quot;: pásale las features ya transformadas</span>
+        <span class="n">y_prob</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_transformed</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_prob</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">is_pipeline</span><span class="p">:</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_transformed</span><span class="p">)</span>
+    <span class="n">y_prob</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">roc_auc_score</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">== Métricas en TEST ==</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test_raw</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">y_prob</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ROC-AUC: </span><span class="si">{</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test_raw</span><span class="p">,</span><span class="w"> </span><span class="n">y_prob</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Aviso al calcular métricas:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+<span class="c1"># -------------------------------------------------------------------</span>
+<span class="c1"># 6) Inicializar LIME sobre el ESPACIO DEL MODELO (numérico)</span>
+<span class="c1">#    - Entrenamos LIME con X_test_transformed (numérico)</span>
+<span class="c1">#    - Usamos predict_fn del CLASIFICADOR FINAL (no del pipeline completo)</span>
+<span class="c1"># -------------------------------------------------------------------</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lime.lime_tabular</span><span class="w"> </span><span class="kn">import</span> <span class="n">LimeTabularExplainer</span>
+
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">LimeTabularExplainer</span><span class="p">(</span>
+    <span class="n">training_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_test_transformed</span><span class="p">),</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;No_Churn&quot;</span><span class="p">,</span> <span class="s2">&quot;Churn&quot;</span><span class="p">],</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+    <span class="n">discretize_continuous</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">predict_proba_fn</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># x llega en espacio transformado -&gt; usar SIEMPRE el clasificador final</span>
+    <span class="k">return</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Sanity check de clases del clasificador final</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;clf.classes_:&quot;</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="s2">&quot;classes_&quot;</span><span class="p">,</span> <span class="s2">&quot;N/A&quot;</span><span class="p">))</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">pos_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">classes_</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># índice de la clase &#39;1&#39;</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="n">pos_idx</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># fallback</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;índice clase Churn=1 en predict_proba:&quot;</span><span class="p">,</span> <span class="n">pos_idx</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">predict_proba_fn</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># asegurar float y shape (n,2)</span>
+    <span class="n">proba</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">proba</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="c1"># Pide 2 etiquetas a LIME y selecciona una segura al graficar</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test_transformed</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test_transformed</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">explain_instance</span><span class="p">(</span>
+        <span class="n">data_row</span><span class="o">=</span><span class="n">X_test_transformed</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+        <span class="n">predict_fn</span><span class="o">=</span><span class="n">predict_proba_fn</span><span class="p">,</span>
+        <span class="n">num_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">top_labels</span><span class="o">=</span><span class="mi">2</span>  <span class="c1"># &lt;- importante: pedir ambas</span>
+    <span class="p">)</span>
+    <span class="c1"># intenta graficar la clase 1; si no existe, usa la disponible</span>
+    <span class="n">labels_avail</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">available_labels</span><span class="p">()</span>
+    <span class="n">label_to_use</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">labels_avail</span> <span class="k">else</span> <span class="n">labels_avail</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">as_pyplot_figure</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label_to_use</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LIME – idx </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> (label </span><span class="si">{</span><span class="n">label_to_use</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">out_file</span> <span class="o">=</span> <span class="n">FIG_OUT</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;lime_idx_</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">_label</span><span class="si">{</span><span class="n">label_to_use</span><span class="si">}</span><span class="s2">.png&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ LIME guardado en: </span><span class="si">{</span><span class="n">out_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>== Métricas en TEST ==
+
+              precision    recall  f1-score   support
+
+           0      0.887     0.786     0.834      1035
+           1      0.550     0.722     0.624       374
+
+    accuracy                          0.769      1409
+   macro avg      0.718     0.754     0.729      1409
+weighted avg      0.797     0.769     0.778      1409
+
+ROC-AUC: 0.8397
+clf.classes_: [0 1]
+índice clase Churn=1 en predict_proba: 1
+</pre></div>
+</div>
+<img alt="_images/73f8b90464e7acac94bcb971c1cf043bf57ce7b8fea1a3db85cc081ff0312fb0.png" src="_images/73f8b90464e7acac94bcb971c1cf043bf57ce7b8fea1a3db85cc081ff0312fb0.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✓ LIME guardado en: c:\Users\juana\MLOPS\miniproyecto6\docs\assets\figuras\lime_idx_0_label1.png
+</pre></div>
+</div>
+<img alt="_images/4e407f3b2b774dfb11c3ac155ec68d72f5358dd0f2a96c42c8893edddc832b7f.png" src="_images/4e407f3b2b774dfb11c3ac155ec68d72f5358dd0f2a96c42c8893edddc832b7f.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✓ LIME guardado en: c:\Users\juana\MLOPS\miniproyecto6\docs\assets\figuras\lime_idx_704_label1.png
+</pre></div>
+</div>
+<img alt="_images/12670983067e759b71d07a0dff921912fcc16f9d4de9cb5c49685e151c839d91.png" src="_images/12670983067e759b71d07a0dff921912fcc16f9d4de9cb5c49685e151c839d91.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✓ LIME guardado en: c:\Users\juana\MLOPS\miniproyecto6\docs\assets\figuras\lime_idx_1408_label1.png
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">FIG_OUT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;docs/assets/figuras&quot;</span><span class="p">);</span> <span class="n">FIG_OUT</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Nombres de features post-preprocesamiento</span>
+<span class="n">feat_names</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+
+<span class="c1"># Soporta RF/XGB/LGBM (modelos con atributo feature_importances_)</span>
+<span class="n">imp</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="s2">&quot;feature_importances_&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">imp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">imp_df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;feature&quot;</span><span class="p">:</span> <span class="n">feat_names</span><span class="p">,</span> <span class="s2">&quot;importance&quot;</span><span class="p">:</span> <span class="n">imp</span><span class="p">})</span>
+                <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;importance&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">imp_df</span><span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">imp_df</span><span class="p">[</span><span class="s2">&quot;importance&quot;</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Top-15 feature_importances_&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">FIG_OUT</span><span class="o">/</span><span class="s2">&quot;imp_feature_importances_top15.png&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Guardado:&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;El modelo no expone feature_importances_. (Omite esta celda o usa Permutation Importance)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/097a0f3b7d3413c72974aa6e872ef54fac42b158507655eae0635ada2348fdec.png" src="_images/097a0f3b7d3413c72974aa6e872ef54fac42b158507655eae0635ada2348fdec.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✓ Guardado: docs\assets\figuras\imp_feature_importances_top15.png
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.inspection</span><span class="w"> </span><span class="kn">import</span> <span class="n">permutation_importance</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">FIG_OUT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;docs/assets/figuras&quot;</span><span class="p">);</span> <span class="n">FIG_OUT</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span> <span class="n">preprocessor</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">clf</span><span class="p">)])</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">permutation_importance</span><span class="p">(</span>
+    <span class="n">pipe</span><span class="p">,</span>              <span class="c1"># pipeline completo</span>
+    <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span>    <span class="c1"># columnas crudas</span>
+    <span class="n">n_repeats</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="c1"># &gt;&gt;&gt; NOMBRES CORRECTOS: columnas crudas (no las transformadas)</span>
+<span class="n">feat_names_in</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+<span class="c1"># Sanity check para evitar mismatches</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">feat_names_in</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">importances_mean</span><span class="p">),</span> \
+    <span class="sa">f</span><span class="s2">&quot;len(names)=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feat_names_in</span><span class="p">)</span><span class="si">}</span><span class="s2"> vs len(imp)=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">importances_mean</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">perm_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s2">&quot;feature&quot;</span><span class="p">:</span> <span class="n">feat_names_in</span><span class="p">,</span>
+        <span class="s2">&quot;mean_importance&quot;</span><span class="p">:</span> <span class="n">res</span><span class="o">.</span><span class="n">importances_mean</span><span class="p">,</span>
+        <span class="s2">&quot;std_importance&quot;</span><span class="p">:</span>  <span class="n">res</span><span class="o">.</span><span class="n">importances_std</span>
+    <span class="p">})</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;mean_importance&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">perm_df</span><span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">perm_df</span><span class="p">[</span><span class="s2">&quot;mean_importance&quot;</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+         <span class="n">xerr</span><span class="o">=</span><span class="n">perm_df</span><span class="p">[</span><span class="s2">&quot;std_importance&quot;</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Top-15 Permutation Importance (ROC-AUC) – nivel input&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">FIG_OUT</span> <span class="o">/</span> <span class="s2">&quot;imp_permutation_input_top15.png&quot;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Guardado:&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/adf69c1f4a5ce5c22ad842fb088db45fe1e0dfe9d27c4a3303464f84bdffe304.png" src="_images/adf69c1f4a5ce5c22ad842fb088db45fe1e0dfe9d27c4a3303464f84bdffe304.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✓ Guardado: docs\assets\figuras\imp_permutation_input_top15.png
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.inspection</span><span class="w"> </span><span class="kn">import</span> <span class="n">PartialDependenceDisplay</span> <span class="k">as</span> <span class="n">PDP</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span> <span class="n">preprocessor</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">clf</span><span class="p">)])</span>
+
+<span class="n">features_pdp</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;tenure&quot;</span><span class="p">,</span> <span class="s2">&quot;MonthlyCharges&quot;</span><span class="p">,</span> <span class="s2">&quot;TotalCharges&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X_test</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">features_pdp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">features_pdp</span><span class="p">:</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">features_pdp</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">features_pdp</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features_pdp</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">PDP</span><span class="o">.</span><span class="n">from_estimator</span><span class="p">(</span><span class="n">pipe</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;average&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PDP – </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">FIG_OUT</span><span class="o">/</span><span class="s2">&quot;pdp_selected.png&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Guardado:&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No se encontraron las columnas numéricas sugeridas para PDP.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7fade3c38a06264c952cf0247fe535d9697d1cb97ba1b4ce0130434fc039184a.png" src="_images/7fade3c38a06264c952cf0247fe535d9697d1cb97ba1b4ce0130434fc039184a.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✓ Guardado: docs\assets\figuras\pdp_selected.png
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shap</span><span class="o">,</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Muestra para velocidad</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">X_sample</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span> <span class="n">preprocessor</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;clf&quot;</span><span class="p">,</span> <span class="n">clf</span><span class="p">)])</span>
+<span class="n">X_sample_tr</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="s2">&quot;pre&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_sample</span><span class="p">)</span>
+<span class="n">feat_names</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="s2">&quot;pre&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">TreeExplainer</span><span class="p">(</span><span class="n">clf</span><span class="p">)</span>
+    <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_sample_tr</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">shap</span><span class="o">.</span><span class="n">summary_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">X_sample_tr</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">feat_names</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="c1"># Si devuelve lista por clase, toma la positiva (1) si existe</span>
+        <span class="n">shap</span><span class="o">.</span><span class="n">summary_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">shap_values</span><span class="p">,</span>
+                          <span class="n">features</span><span class="o">=</span><span class="n">X_sample_tr</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">feat_names</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">FIG_OUT</span><span class="o">/</span><span class="s2">&quot;shap_beeswarm.png&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Guardado:&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SHAP TreeExplainer no disponible para este estimador:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 800x600 with 0 Axes&gt;
+</pre></div>
+</div>
+<img alt="_images/d18c917697bfa74b7b6dae85a84d8d1207cc4ff134bfd9b3062a5e319f9da7e7.png" src="_images/d18c917697bfa74b7b6dae85a84d8d1207cc4ff134bfd9b3062a5e319f9da7e7.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✓ Guardado: docs\assets\figuras\shap_beeswarm.png
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lime.lime_tabular</span><span class="w"> </span><span class="kn">import</span> <span class="n">LimeTabularExplainer</span>
+
+<span class="c1"># nombres y datos transformados</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+<span class="n">X_test_transformed</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="c1"># ¡explainer de LIME, no SHAP!</span>
+<span class="n">lime_explainer</span> <span class="o">=</span> <span class="n">LimeTabularExplainer</span><span class="p">(</span>
+    <span class="n">training_data</span><span class="o">=</span><span class="n">X_test_transformed</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;No_Churn&quot;</span><span class="p">,</span> <span class="s2">&quot;Churn&quot;</span><span class="p">],</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span>
+    <span class="n">discretize_continuous</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># función de predicción</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">predict_proba_fn</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">idx</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># ejemplo</span>
+<span class="n">exp_row</span> <span class="o">=</span> <span class="n">lime_explainer</span><span class="o">.</span><span class="n">explain_instance</span><span class="p">(</span>
+    <span class="n">X_test_transformed</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+    <span class="n">predict_proba_fn</span><span class="p">,</span>
+    <span class="n">num_features</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">top_labels</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+
+<span class="c1"># visualizar / guardar figura</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">exp_row</span><span class="o">.</span><span class="n">as_pyplot_figure</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># clase positiva</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/00694c4f7bf03886431a776df992fa5c72cf90a2588a771d1568071aa054fd98.png" src="_images/00694c4f7bf03886431a776df992fa5c72cf90a2588a771d1568071aa054fd98.png" />
+</div>
+</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -426,17 +797,8 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title"><strong>5. Evaluacion de metricas</strong></p>
       </div>
-    </a>
-    <a class="right-next"
-       href="07_fastapi_servicio.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

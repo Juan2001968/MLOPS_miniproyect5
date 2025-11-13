@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; Miniproyecto 6 · Telco Churn con Árboles + MLOps</title>
+    <title>3. Preprocesamiento de Datos &#8212; Miniproyecto 6 · Telco Churn con Árboles + MLOps</title>
   
   
   
@@ -60,7 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '03_preprocesamiento';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="04_modelado_arboles_gridsearch.html" />
+    <link rel="next" title="4. Modelado" href="04_modelado_arboles_gridsearch.html" />
     <link rel="prev" title="2. Análisis Exploratorio de Datos (EDA)" href="02_eda.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -180,15 +180,13 @@
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Proyecto</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_contexto_churn.html">1. Contexto del Dataset: <em>Telco Customer Churn</em></a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_eda.html"><strong>2. Análisis Exploratorio de Datos (EDA)</strong></a></li>
-<li class="toctree-l1"><a class="reference internal" href="06_interpretabilidad.html">SECCION 6</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09_dashboard_dash.html">SECCION 9</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Referencias</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="references.html">Referencias</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><strong>3. Preprocesamiento de Datos</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_modelado_arboles_gridsearch.html"><strong>4. Modelado</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_evaluacion_metricas_clasificacion.html"><strong>5. Evaluacion de metricas</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_interpretabilidad.html"><strong>6. Interpretabilidad</strong></a></li>
 </ul>
 
     </div>
@@ -361,9 +359,7 @@ document.write(`
   </button>
 `);
 </script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</button>
+
 </div></div>
       
     </div>
@@ -374,19 +370,11 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1><no title></h1>
+    <h1>3. Preprocesamiento de Datos</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
@@ -396,7 +384,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <div class="cell docutils container">
+  <section class="tex2jax_ignore mathjax_ignore" id="preprocesamiento-de-datos">
+<h1><strong>3. Preprocesamiento de Datos</strong><a class="headerlink" href="#preprocesamiento-de-datos" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># === Sección 3: Preprocesamiento ===</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -704,6 +694,7 @@ Preprocessor guardado en: C:\Users\juana\MLOPS\miniproyecto6\models\preprocessor
 </div>
 </div>
 </div>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -749,7 +740,7 @@ Preprocessor guardado en: C:\Users\juana\MLOPS\miniproyecto6\models\preprocessor
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title"><strong>4. Modelado</strong></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -759,21 +750,6 @@ Preprocessor guardado en: C:\Users\juana\MLOPS\miniproyecto6\models\preprocessor
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-  </nav></div>
-
-</div></div>
               
             
           </div>
