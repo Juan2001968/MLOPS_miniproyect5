@@ -21,6 +21,8 @@ Todo el flujo está diseñado para cumplir con las buenas prácticas del ciclo d
 ---
 
 # 📁 Estructura del Proyecto
+
+```plaintext
 proyecto-churn-mlops/
 ├── notebooks/                     # ETL, EDA, modelado, experimentación
 │   └── ...                        # Notebooks del proyecto
@@ -74,7 +76,7 @@ proyecto-churn-mlops/
 ├── docker-compose.yml             # (opcional) Orquestación local
 ├── requirements.txt               # Dependencias del proyecto
 └── README.md                      # Este archivo
-
+```
 #  Modelo de Machine Learning
 
 - **Algoritmo:** XGBoost Classifier  
@@ -94,17 +96,16 @@ proyecto-churn-mlops/
   - `Contract`, `PaperlessBilling`, `PaymentMethod`
 
 El modelo final se guarda en:
-
-```text
+```bash
 models/xgb_clf_only.joblib
-
+```
 # 🛠 Instalación y Uso en Entorno Local
 
 ## 1️⃣ Crear entorno virtual
 ```bash
 conda create -n mlops python=3.11
 conda activate mlops
-
+```
 ##  Arquitectura del Proyecto
 
 ```plaintext
@@ -130,3 +131,4 @@ conda activate mlops
          │ Docker + GitHub Actions  │
          │ CI (lint/tests) + CD     │
          └──────────────────────────┘
+```
