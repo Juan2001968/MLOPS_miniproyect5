@@ -358,7 +358,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -374,6 +376,24 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-automatica-de-artefactos-del-modelo-y-preprocesador"><strong>1. Carga automática de artefactos del modelo y preprocesador</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-salidas-metricas-y-explicaciones-lime"><strong>2. Interpretación de Salidas — Métricas y Explicaciones LIME</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#top-15-feature-importances-modelo-final"><strong>3. <em>Top-15 Feature Importances</em> — Modelo Final</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#top-15-permutation-importance-roc-auc"><strong>4. Top-15 Permutation Importance (ROC-AUC)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graficas-pdp-partial-dependence-para-tenure-monthlycharges-y-totalcharges"><strong>5. Gráficas PDP (Partial Dependence) para <code class="docutils literal notranslate"><span class="pre">tenure</span></code>, <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> y <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code></strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pdp-tenure-tiempo-con-la-compania">PDP – <code class="docutils literal notranslate"><span class="pre">tenure</span></code> (tiempo con la compañía)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pdp-monthlycharges-cargo-mensual">PDP – <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> (cargo mensual)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pdp-totalcharges-total-pagado-historicamente">PDP – <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> (total pagado históricamente)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shap-interaction-plot-efecto-conjunto-de-seniorcitizen-y-tenure-sobre-el-churn"><strong>6. SHAP interaction plot: efecto conjunto de <em>SeniorCitizen</em> y <em>tenure</em> sobre el Churn</strong></a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -385,6 +405,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="interpretabilidad">
 <h1><strong>6. Interpretabilidad</strong><a class="headerlink" href="#interpretabilidad" title="Link to this heading">#</a></h1>
+<section id="carga-automatica-de-artefactos-del-modelo-y-preprocesador">
+<h2><strong>1. Carga automática de artefactos del modelo y preprocesador</strong><a class="headerlink" href="#carga-automatica-de-artefactos-del-modelo-y-preprocesador" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -431,6 +453,16 @@ Preprocessor path: C:\Users\juana\MLOPS\miniproyecto6\models\preprocessor.joblib
 </div>
 </div>
 </div>
+<p>El código detecta automáticamente la carpeta <strong><code class="docutils literal notranslate"><span class="pre">models</span></code></strong> sin importar desde qué ubicación se ejecute el script. Esto se hace probando rutas relativas (<code class="docutils literal notranslate"><span class="pre">models</span></code>, <code class="docutils literal notranslate"><span class="pre">../models</span></code>, <code class="docutils literal notranslate"><span class="pre">../../models</span></code>) hasta encontrar una existente.<br />
+Luego carga dos artefactos esenciales para inferencia:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">xgb_best.joblib</span></code></strong> → el mejor modelo entrenado (XGBoost)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">preprocessor.joblib</span></code></strong> → el transformador que procesa los datos antes de entrar al modelo</p></li>
+</ul>
+<p>Este proceso asegura que la inferencia sea <strong>reproducible</strong>, ya que se usan exactamente los mismos pasos y parámetros que en el entrenamiento.</p>
+</section>
+<section id="interpretacion-de-salidas-metricas-y-explicaciones-lime">
+<h2><strong>2. Interpretación de Salidas — Métricas y Explicaciones LIME</strong><a class="headerlink" href="#interpretacion-de-salidas-metricas-y-explicaciones-lime" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
@@ -552,6 +584,66 @@ clf.classes_: [0 1]
 </div>
 </div>
 </div>
+<ol class="arabic simple">
+<li><p>Métricas de desempeño del modelo en Test</p></li>
+</ol>
+<p>El modelo predice dos clases:</p>
+<ul class="simple">
+<li><p><strong>0 = No churn</strong></p></li>
+<li><p><strong>1 = Churn</strong></p></li>
+</ul>
+<p>El reporte de clasificación incluye:</p>
+<ul class="simple">
+<li><p><strong>Precision:</strong> qué tan precisas son las predicciones positivas.</p></li>
+<li><p><strong>Recall:</strong> qué tanto detecta correctamente los casos positivos (churn).</p></li>
+<li><p><strong>F1-score:</strong> equilibrio entre precisión y recall.</p></li>
+<li><p><strong>Support:</strong> tamaño real de cada clase.</p></li>
+<li><p><strong>Accuracy:</strong> porcentaje total de aciertos.</p></li>
+<li><p><strong>ROC-AUC:</strong> capacidad del modelo para separar ambas clases de forma global.</p></li>
+</ul>
+<p>El resultado:</p>
+<ul class="simple">
+<li><p>🔹 El modelo obtiene <strong>0.8397 de ROC-AUC</strong>, indicando buena capacidad discriminativa.</p></li>
+<li><p>🔹 Para clase 1 (churn), logra <strong>recall de 0.722</strong>, es decir, detecta la mayoría de los clientes que se van.</p></li>
+<li><p>🔹 La precisión es menor (0.550), típico en datasets desbalanceados.</p></li>
+</ul>
+<p>Este comportamiento confirma que el modelo está alineado con los resultados anteriores y que los artefactos (<code class="docutils literal notranslate"><span class="pre">xgb_best.joblib</span></code> + preprocessor) fueron cargados correctamente.</p>
+<ol class="arabic simple" start="2">
+<li><p>Explicaciones locales con LIME</p></li>
+</ol>
+<p>Las tres gráficas corresponden a <strong>explicaciones locales</strong> para tres registros distintos del test:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">idx</span> <span class="pre">=</span> <span class="pre">0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">idx</span> <span class="pre">=</span> <span class="pre">704</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">idx</span> <span class="pre">=</span> <span class="pre">1408</span></code></p></li>
+</ul>
+<p>Cada gráfico muestra:</p>
+<ul class="simple">
+<li><p>Barras <strong>rojas</strong> → Variables que empujan la predicción hacia <strong>Churn (1)</strong>.</p></li>
+<li><p>Barras <strong>verdes</strong> → Variables que empujan hacia <strong>No Churn (0)</strong>.</p></li>
+<li><p>Las reglas (por ejemplo: <code class="docutils literal notranslate"><span class="pre">Contract_Month-to-month</span> <span class="pre">&lt;=</span> <span class="pre">0.00</span></code>) representan condiciones sobre variables transformadas por el preprocesador.</p></li>
+</ul>
+<p>¿Qué significan estas explicaciones?</p>
+<p>✔ Permiten ver <strong>por qué</strong> el modelo cree que ese cliente abandonará (o no).<br />
+✔ Revelan patrones individuales que no se observan en métricas globales.<br />
+✔ Confirman elementos clave en churn: tipo de contrato, servicio de fibra óptica, tenure, cargos mensuales, etc.</p>
+<p>Observaciones generales:</p>
+<ul>
+<li><p>Los clientes con contrato <strong>Month-to-month</strong>, sin <strong>tech support</strong>, sin <strong>online security</strong> o con <strong>fiber optic</strong> suelen tener fuerte impulso hacia churn.</p></li>
+<li><p>El <strong>tenure alto</strong> (muchos meses con la empresa) aparece como factor protector en algunos casos (barras verdes).</p></li>
+<li><p>Los cargos altos (<code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code>, <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code>) tienden a empujar hacia churn.</p>
+<p>Conclusión general</p>
+</li>
+</ul>
+<p>La salida completa confirma:</p>
+<ul class="simple">
+<li><p>El modelo XGBoost cargado funciona adecuadamente y conserva sus métricas originales.</p></li>
+<li><p>LIME se integra correctamente sobre las features transformadas, produciendo explicaciones coherentes.</p></li>
+<li><p>Las explicaciones locales ayudan a interpretar casos individuales y a validar el comportamiento del modelo.</p></li>
+</ul>
+</section>
+<section id="top-15-feature-importances-modelo-final">
+<h2><strong>3. <em>Top-15 Feature Importances</em> — Modelo Final</strong><a class="headerlink" href="#top-15-feature-importances-modelo-final" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -589,6 +681,20 @@ clf.classes_: [0 1]
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p><strong>Tenure</strong>, <strong>TotalCharges</strong> y <strong>Contract_Month-to-month</strong> aparecen como las variables más influyentes, lo que coincide con patrones usuales en problemas de churn:</p>
+<ul>
+<li><p>clientes con poco tiempo en la empresa tienden a cancelar más;</p></li>
+<li><p>contratos mes a mes implican mayor probabilidad de abandono;</p></li>
+<li><p>cargos mensuales y totales suelen reflejar nivel de uso/engagement.</p></li>
+</ul>
+</li>
+<li><p>También aparecen variables binarias derivadas del One-Hot Encoding (ej. <code class="docutils literal notranslate"><span class="pre">OnlineSecurity_No</span></code>, <code class="docutils literal notranslate"><span class="pre">TechSupport_No</span></code>, <code class="docutils literal notranslate"><span class="pre">InternetService_Fiber</span> <span class="pre">optic</span></code>), lo que permite ver <strong>cómo ciertos servicios o su ausencia afectan la decisión</strong>.</p></li>
+<li><p>El objetivo del gráfico es ofrecer <strong>transparencia del modelo</strong> y facilitar conclusiones accionables para el negocio (mejorar soporte, reforzar contratos anuales, segmentar clientes por tenure, etc.).</p></li>
+</ul>
+</section>
+<section id="top-15-permutation-importance-roc-auc">
+<h2><strong>4. Top-15 Permutation Importance (ROC-AUC)</strong><a class="headerlink" href="#top-15-permutation-importance-roc-auc" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
@@ -645,6 +751,32 @@ clf.classes_: [0 1]
 </div>
 </div>
 </div>
+<ol class="arabic simple">
+<li><p><strong>Contract</strong> es, por amplio margen, la variable más influyente del modelo.</p>
+<ul class="simple">
+<li><p>Cambiar el tipo de contrato afecta fuertemente la capacidad del modelo para distinguir churn.</p></li>
+<li><p>Esto coincide con la lógica del negocio: contratos mes a mes suelen tener riesgo elevado de cancelación.</p></li>
+</ul>
+</li>
+<li><p><strong>Tenure</strong> (tiempo de permanencia) también tiene gran impacto.</p>
+<ul class="simple">
+<li><p>Clientes nuevos muestran comportamiento más inestable.</p></li>
+</ul>
+</li>
+<li><p><strong>InternetService</strong>, <strong>TotalCharges</strong> y <strong>OnlineSecurity</strong> aparecen como señales sólidas de comportamiento de churn.</p></li>
+<li><p>Variables como:</p>
+<ul class="simple">
+<li><p>Partner</p></li>
+<li><p>Dependents</p></li>
+<li><p>MultipleLines</p></li>
+<li><p>PhoneService<br />
+muestran baja importancia, indicando que <strong>no aportan mucho al modelo</strong>.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="graficas-pdp-partial-dependence-para-tenure-monthlycharges-y-totalcharges">
+<h2><strong>5. Gráficas PDP (Partial Dependence) para <code class="docutils literal notranslate"><span class="pre">tenure</span></code>, <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> y <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code></strong><a class="headerlink" href="#graficas-pdp-partial-dependence-para-tenure-monthlycharges-y-totalcharges" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.inspection</span><span class="w"> </span><span class="kn">import</span> <span class="n">PartialDependenceDisplay</span> <span class="k">as</span> <span class="n">PDP</span>
@@ -678,6 +810,40 @@ clf.classes_: [0 1]
 </div>
 </div>
 </div>
+<p>Los gráficos de <strong>Partial Dependence</strong> muestran cómo cambia la probabilidad predicha de <em>Churn</em> cuando se varía <strong>una sola variable</strong> y se promedian los efectos del resto de características.</p>
+<section id="pdp-tenure-tiempo-con-la-compania">
+<h3>PDP – <code class="docutils literal notranslate"><span class="pre">tenure</span></code> (tiempo con la compañía)<a class="headerlink" href="#pdp-tenure-tiempo-con-la-compania" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>La curva desciende de forma clara a medida que aumenta <code class="docutils literal notranslate"><span class="pre">tenure</span></code>.</p></li>
+<li><p>Para clientes con <strong>poco tiempo</strong> de permanencia, la probabilidad de churn es <strong>más alta</strong> (alrededor de 0.44–0.45).</p></li>
+<li><p>A partir de ~20–30 meses la probabilidad se estabiliza en valores más bajos (≈0.30 o incluso menos).</p></li>
+<li><p><strong>Interpretación:</strong> el modelo aprende que los clientes <strong>recién llegados</strong> son mucho más propensos a irse, mientras que los clientes con <strong>más meses de antigüedad</strong> son más estables y tienen menor riesgo de churn.</p></li>
+</ul>
+</section>
+<section id="pdp-monthlycharges-cargo-mensual">
+<h3>PDP – <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> (cargo mensual)<a class="headerlink" href="#pdp-monthlycharges-cargo-mensual" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>En los valores bajos de <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> la probabilidad de churn se mantiene relativamente baja y estable.</p></li>
+<li><p>A partir de un cierto umbral (alrededor de 60–70 unidades monetarias), la curva empieza a <strong>incrementar de forma más marcada</strong>.</p></li>
+<li><p><strong>Interpretación:</strong> el modelo captura que los clientes con <strong>facturas mensuales altas</strong> tienen <strong>mayor probabilidad de cancelar el servicio</strong>, posiblemente por percepción de costo elevado o falta de relación costo–beneficio.</p></li>
+</ul>
+</section>
+<section id="pdp-totalcharges-total-pagado-historicamente">
+<h3>PDP – <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> (total pagado históricamente)<a class="headerlink" href="#pdp-totalcharges-total-pagado-historicamente" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Para valores muy bajos de <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> (clientes que han pagado poco en total) la probabilidad de churn es <strong>más alta</strong>.</p></li>
+<li><p>Conforme crece <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code>, la curva <strong>desciende y se estabiliza</strong> en niveles de probabilidad menores (~0.32).</p></li>
+<li><p><strong>Interpretación:</strong> quienes han pagado <strong>mucho en toda su vida como cliente</strong> suelen ser usuarios de larga trayectoria, más fidelizados y con <strong>menor probabilidad de churn</strong>, mientras que los clientes con poco gasto acumulado (nuevos o inactivos) son más inestables.</p></li>
+</ul>
+<p>En conjunto, estos PDP confirman un patrón coherente con el negocio:</p>
+<ul class="simple">
+<li><p><strong>Antigüedad y gasto total alto</strong> → menor riesgo de churn (clientes fidelizados).</p></li>
+<li><p><strong>Cargos mensuales altos</strong> → mayor riesgo de churn (sensibilidad al precio).</p></li>
+</ul>
+</section>
+</section>
+<section id="shap-interaction-plot-efecto-conjunto-de-seniorcitizen-y-tenure-sobre-el-churn">
+<h2><strong>6. SHAP interaction plot: efecto conjunto de <em>SeniorCitizen</em> y <em>tenure</em> sobre el Churn</strong><a class="headerlink" href="#shap-interaction-plot-efecto-conjunto-de-seniorcitizen-y-tenure-sobre-el-churn" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shap</span><span class="o">,</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -718,6 +884,30 @@ clf.classes_: [0 1]
 </div>
 </div>
 </div>
+<p>La figura muestra un gráfico de interacción SHAP (tipo beeswarm) para dos variables numéricas del modelo:</p>
+<ul class="simple">
+<li><p><strong>Ejes y etiquetas</strong></p>
+<ul>
+<li><p>En el eje <strong>y</strong> aparecen las variables <code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code> y <code class="docutils literal notranslate"><span class="pre">tenure</span></code>.</p></li>
+<li><p>En el eje <strong>x</strong> se representan los <strong>valores de interacción SHAP</strong>: cuánto cambia la predicción de probabilidad de <em>Churn</em> cuando ambas variables toman determinados valores al mismo tiempo.</p></li>
+</ul>
+</li>
+<li><p><strong>Puntos y colores</strong></p>
+<ul>
+<li><p>Cada punto es un cliente del conjunto de test.</p></li>
+<li><p>El color indica el valor de la característica en esa observación (por ejemplo, en <code class="docutils literal notranslate"><span class="pre">tenure</span></code>: puntos rosados ≈ valores bajos, azules ≈ valores altos).</p></li>
+<li><p>La dispersión horizontal de los puntos indica cuánto contribuyen esas combinaciones de valores al aumento o disminución del <em>Churn</em>; valores a la derecha → <strong>incrementan</strong> la probabilidad de <em>Churn</em>, valores a la izquierda → <strong>la reducen</strong>.</p></li>
+</ul>
+</li>
+<li><p><strong>Lectura principal</strong></p>
+<ul>
+<li><p>Se observa que la variable <strong><code class="docutils literal notranslate"><span class="pre">tenure</span></code></strong> tiene una interacción clara: clientes con <strong>poca antigüedad</strong> (tenure bajo, puntos rosados) tienden a desplazar los valores SHAP hacia la derecha, es decir, <strong>aumentan el riesgo de Churn</strong>.</p></li>
+<li><p>A medida que el <strong>tenure crece</strong> (puntos azules), los valores SHAP se acercan a 0 o incluso a la zona negativa, lo que indica una <strong>disminución del riesgo</strong>.</p></li>
+<li><p>Para <strong><code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code></strong>, la nube de puntos está mucho más concentrada alrededor de 0: su efecto conjunto con <code class="docutils literal notranslate"><span class="pre">tenure</span></code> es más débil y el modelo casi no modifica la probabilidad de Churn solo por ser adulto mayor o no, comparado con la importancia de la antigüedad.</p></li>
+</ul>
+</li>
+</ul>
+<p>En resumen, este gráfico confirma que el modelo utiliza sobre todo la <strong>antigüedad del cliente (<code class="docutils literal notranslate"><span class="pre">tenure</span></code>)</strong> para ajustar la probabilidad de Churn, mientras que la condición de <strong>adulto mayor (<code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>)</strong> tiene un efecto mucho menor y casi neutro cuando se analiza su interacción con la antigüedad.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lime.lime_tabular</span><span class="w"> </span><span class="kn">import</span> <span class="n">LimeTabularExplainer</span>
@@ -759,6 +949,7 @@ clf.classes_: [0 1]
 <img alt="_images/00694c4f7bf03886431a776df992fa5c72cf90a2588a771d1568071aa054fd98.png" src="_images/00694c4f7bf03886431a776df992fa5c72cf90a2588a771d1568071aa054fd98.png" />
 </div>
 </div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -806,6 +997,31 @@ clf.classes_: [0 1]
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-automatica-de-artefactos-del-modelo-y-preprocesador"><strong>1. Carga automática de artefactos del modelo y preprocesador</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-de-salidas-metricas-y-explicaciones-lime"><strong>2. Interpretación de Salidas — Métricas y Explicaciones LIME</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#top-15-feature-importances-modelo-final"><strong>3. <em>Top-15 Feature Importances</em> — Modelo Final</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#top-15-permutation-importance-roc-auc"><strong>4. Top-15 Permutation Importance (ROC-AUC)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graficas-pdp-partial-dependence-para-tenure-monthlycharges-y-totalcharges"><strong>5. Gráficas PDP (Partial Dependence) para <code class="docutils literal notranslate"><span class="pre">tenure</span></code>, <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> y <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code></strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pdp-tenure-tiempo-con-la-compania">PDP – <code class="docutils literal notranslate"><span class="pre">tenure</span></code> (tiempo con la compañía)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pdp-monthlycharges-cargo-mensual">PDP – <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code> (cargo mensual)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pdp-totalcharges-total-pagado-historicamente">PDP – <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> (total pagado históricamente)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shap-interaction-plot-efecto-conjunto-de-seniorcitizen-y-tenure-sobre-el-churn"><strong>6. SHAP interaction plot: efecto conjunto de <em>SeniorCitizen</em> y <em>tenure</em> sobre el Churn</strong></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

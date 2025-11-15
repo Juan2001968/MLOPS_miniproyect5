@@ -359,7 +359,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -375,6 +377,24 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-inicial-para-modelado-supervisado"><strong>1. Configuración inicial para modelado supervisado</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generacion-de-splits-crudos-data-interim-para-telco-churn"><strong>2. Generación de <em>splits</em> crudos (data/interim) para Telco Churn</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-de-la-busqueda-de-hiperparametros-para-random-forest"><strong>3. Resultados de la búsqueda de hiperparámetros para Random Forest</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-de-la-busqueda-de-hiperparametros-para-xgboost-xgbclassifier"><strong>4. Resultados de la búsqueda de hiperparámetros para XGBoost (XGBClassifier)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-de-la-busqueda-de-hiperparametros-con-lightgbm"><strong>5. Resultados de la búsqueda de hiperparámetros con LightGBM</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verificacion-de-rutas-del-proyecto-y-modelos-disponibles"><strong>6. Verificación de rutas del proyecto y modelos disponibles</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparacion-final-de-modelos-en-el-conjunto-de-prueba-rf-vs-xgb-vs-lgbm"><strong>7. Comparación final de modelos en el conjunto de prueba (RF vs XGB vs LGBM)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-final">Conclusión final</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluacion-final-del-mejor-modelo-xgboost-en-el-conjunto-de-prueba"><strong>8. Evaluación final del mejor modelo (XGBoost) en el conjunto de prueba</strong></a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -386,6 +406,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="modelado">
 <h1><strong>4. Modelado</strong><a class="headerlink" href="#modelado" title="Link to this heading">#</a></h1>
+<section id="configuracion-inicial-para-modelado-supervisado">
+<h2><strong>1. Configuración inicial para modelado supervisado</strong><a class="headerlink" href="#configuracion-inicial-para-modelado-supervisado" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -438,6 +460,10 @@ document.write(`
 </div>
 </div>
 </div>
+<p>Ese valor (~2.7) indica que la clase Churn = 1 es unas 2.7 veces menos frecuente que la clase No Churn = 0, por lo que los modelos de gradiente deberán darle mayor peso a los errores en la clase positiva.</p>
+</section>
+<section id="generacion-de-splits-crudos-data-interim-para-telco-churn">
+<h2><strong>2. Generación de <em>splits</em> crudos (data/interim) para Telco Churn</strong><a class="headerlink" href="#generacion-de-splits-crudos-data-interim-para-telco-churn" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -509,6 +535,7 @@ Distribución y_test : {0: 0.735, 1: 0.265}
 </div>
 </div>
 </div>
+<p>Esas proporciones indican que aproximadamente el 26.5 % de los clientes hacen churn y el 73.5 % se mantiene, tanto en entrenamiento como en prueba, gracias al stratify=y_raw.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -538,6 +565,9 @@ Distribución y_test : {0: 0.735, 1: 0.265}
 </div>
 </div>
 </div>
+</section>
+<section id="resultados-de-la-busqueda-de-hiperparametros-para-random-forest">
+<h2><strong>3. Resultados de la búsqueda de hiperparámetros para Random Forest</strong><a class="headerlink" href="#resultados-de-la-busqueda-de-hiperparametros-para-random-forest" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rf_pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
@@ -581,6 +611,49 @@ RF best params: {&#39;clf__bootstrap&#39;: True, &#39;clf__criterion&#39;: &#39;
 </div>
 </div>
 </div>
+<p>La salida muestra el resumen del <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> aplicado al pipeline con <strong>RandomForestClassifier</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Fitting</span> <span class="pre">5</span> <span class="pre">folds</span> <span class="pre">for</span> <span class="pre">each</span> <span class="pre">of</span> <span class="pre">36</span> <span class="pre">candidates,</span> <span class="pre">totalling</span> <span class="pre">180</span> <span class="pre">fits</span></code></p>
+<ul>
+<li><p>Se definió una <strong>búsqueda en malla</strong> (<code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code>) con:</p>
+<ul>
+<li><p>36 combinaciones distintas de hiperparámetros (<code class="docutils literal notranslate"><span class="pre">36</span> <span class="pre">candidates</span></code>).</p></li>
+<li><p>Validación cruzada estratificada de <strong>5 folds</strong>.</p></li>
+</ul>
+</li>
+<li><p>En total se entrenaron <strong>180 modelos</strong> (36 combinaciones × 5 folds).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RF</span> <span class="pre">best</span> <span class="pre">ROC-AUC:</span> <span class="pre">0.8442564977030317</span></code></p>
+<ul>
+<li><p>El mejor modelo encontrado alcanzó un <strong>ROC-AUC ≈ 0.844</strong>, lo que indica una <strong>buena capacidad de discriminación</strong> entre clientes que hacen churn (1) y los que no (0).</p></li>
+<li><p>Mientras más se acerque a 1.0, mejor separa las clases; valores &gt; 0.8 suelen considerarse bastante buenos en muchos problemas reales.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RF</span> <span class="pre">best</span> <span class="pre">params:</span> <span class="pre">{...}</span></code><br />
+El mejor modelo usa los siguientes <strong>hiperparámetros</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__bootstrap:</span> <span class="pre">True</span></code><br />
+El Random Forest se entrena con <em>bootstrap</em> (muestreo con reemplazo) para cada árbol, lo típico en RF estándar.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__criterion:</span> <span class="pre">'gini'</span></code><br />
+La impureza de los nodos se mide con el índice de Gini (en vez de <code class="docutils literal notranslate"><span class="pre">entropy</span></code>).<br />
+Esto afecta cómo se hacen las particiones en los árboles.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__max_features:</span> <span class="pre">'log2'</span></code><br />
+En cada split, el árbol considera solo <code class="docutils literal notranslate"><span class="pre">log2(n_features)</span></code> variables candidatas.<br />
+Esto introduce más aleatoriedad y puede mejorar generalización.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__min_samples_leaf:</span> <span class="pre">4</span></code><br />
+Cada hoja del árbol debe tener al menos <strong>4 observaciones</strong>.<br />
+Hojas con mínimo mayor reducen el sobreajuste (evitan hojas muy pequeñas).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__min_samples_split:</span> <span class="pre">2</span></code><br />
+Un nodo se puede dividir si tiene al menos <strong>2 muestras</strong>.<br />
+Combinado con <code class="docutils literal notranslate"><span class="pre">min_samples_leaf=4</span></code>, permite cierta profundidad pero sigue controlando el tamaño mínimo de hojas.</p></li>
+</ul>
+</li>
+</ul>
+<p>En resumen, de todas las combinaciones probadas, el modelo con estos hiperparámetros fue el que logró <strong>mayor ROC-AUC media en CV (≈ 0.844)</strong></p>
+</section>
+<section id="resultados-de-la-busqueda-de-hiperparametros-para-xgboost-xgbclassifier">
+<h2><strong>4. Resultados de la búsqueda de hiperparámetros para XGBoost (XGBClassifier)</strong><a class="headerlink" href="#resultados-de-la-busqueda-de-hiperparametros-para-xgboost-xgbclassifier" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb_pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
@@ -631,6 +704,52 @@ XGB best params: {&#39;clf__colsample_bytree&#39;: 0.7, &#39;clf__gamma&#39;: 1.
 </div>
 </div>
 </div>
+<p>La salida corresponde al <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> aplicado al pipeline con <strong>XGBClassifier</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Fitting</span> <span class="pre">5</span> <span class="pre">folds</span> <span class="pre">for</span> <span class="pre">each</span> <span class="pre">of</span> <span class="pre">1296</span> <span class="pre">candidates,</span> <span class="pre">totalling</span> <span class="pre">6480</span> <span class="pre">fits</span></code></p>
+<ul>
+<li><p>El grid de hiperparámetros tiene <strong>1.296 combinaciones distintas</strong> (<code class="docutils literal notranslate"><span class="pre">1296</span> <span class="pre">candidates</span></code>).</p></li>
+<li><p>Se utilizó validación cruzada estratificada de <strong>5 folds</strong>, por lo que se entrenaron:<br />
+[
+1296 combinaciones  folds = 6480
+]</p></li>
+<li><p>Esto implica una búsqueda mucho más exhaustiva que la de Random Forest, por eso el número de <em>fits</em> es tan alto.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XGB</span> <span class="pre">best</span> <span class="pre">ROC-AUC:</span> <span class="pre">0.848440533786993</span></code></p>
+<ul>
+<li><p>El mejor modelo de XGBoost alcanzó un <strong>ROC-AUC ≈ 0.848</strong>, ligeramente mejor que el obtenido con Random Forest (~0.844).</p></li>
+<li><p>Un ROC-AUC en este rango indica que el modelo tiene <strong>muy buena capacidad para separar clientes que hacen churn (1) de los que no (0)</strong>, midiendo el trade-off entre TPR y FPR a través de diferentes umbrales.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XGB</span> <span class="pre">best</span> <span class="pre">params:</span> <span class="pre">{...}</span></code><br />
+Los hiperparámetros óptimos encontrados son:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__colsample_bytree:</span> <span class="pre">0.7</span></code><br />
+Cada árbol solo ve el <strong>70 % de las variables</strong> en cada split, lo que introduce aleatoriedad y ayuda a evitar sobreajuste.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__gamma:</span> <span class="pre">1.0</span></code><br />
+Controla el <strong>mínimo descenso en la pérdida</strong> requerido para hacer una nueva partición.<br />
+Un valor mayor (1.0) hace que el árbol sea más conservador, evitando splits que no mejoren suficientemente el modelo.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__max_depth:</span> <span class="pre">3</span></code><br />
+Profundidad máxima de los árboles = 3.<br />
+Árboles poco profundos suelen <strong>generalizar mejor</strong> y reducen el riesgo de sobreajuste.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__min_child_weight:</span> <span class="pre">3</span></code><br />
+Peso mínimo de las instancias en un nodo hijo.<br />
+Un valor 3 también hace que el modelo sea más conservador, evitando hojas con muy pocas observaciones.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__reg_alpha:</span> <span class="pre">1.0</span></code><br />
+<strong>Regularización L1</strong> distinta de cero, que induce cierta sparsidad en los pesos y ayuda a controlar el sobreajuste.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__reg_lambda:</span> <span class="pre">2.0</span></code><br />
+<strong>Regularización L2</strong> relativamente fuerte, penalizando coeficientes grandes y contribuyendo a la estabilidad del modelo.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__scale_pos_weight:</span> <span class="pre">1.0</span></code><br />
+Aunque probaste incluir el <code class="docutils literal notranslate"><span class="pre">pos_weight</span></code> teórico para el desbalance, la búsqueda encontró que el mejor desempeño es con <strong>peso 1.0</strong>, es decir, sin reponderar adicionalmente la clase positiva en XGBoost (probablemente porque el desbalance no es extremo o ya está manejado indirectamente).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__subsample:</span> <span class="pre">0.9</span></code><br />
+Cada árbol se entrena con el <strong>90 % de las filas</strong> (submuestreo de instancias), lo que introduce variabilidad y ayuda a mejorar la generalización.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="resultados-de-la-busqueda-de-hiperparametros-con-lightgbm">
+<h2><strong>5. Resultados de la búsqueda de hiperparámetros con LightGBM</strong><a class="headerlink" href="#resultados-de-la-busqueda-de-hiperparametros-con-lightgbm" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">GridSearchCV</span>
@@ -751,6 +870,129 @@ Best params (cv=5): {&#39;clf__class_weight&#39;: &#39;balanced&#39;, &#39;clf__
 </div>
 </div>
 </div>
+<p>Resumen de la búsqueda</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Fitting</span> <span class="pre">5</span> <span class="pre">folds</span> <span class="pre">for</span> <span class="pre">each</span> <span class="pre">of</span> <span class="pre">32</span> <span class="pre">candidates,</span> <span class="pre">totalling</span> <span class="pre">160</span> <span class="pre">fits</span></code></p>
+<ul>
+<li><p>El grid de hiperparámetros tiene <strong>32 combinaciones diferentes</strong>.</p></li>
+<li><p>Con validación cruzada estratificada de <strong>5 folds</strong>, se entrenan:<br />
+[
+32 \text{ modelos} \times 5 \text{ folds} = 160 \text{ entrenamientos}
+]</p></li>
+<li><p>Esto cumple el requisito de <strong>5 particiones estratificadas</strong>.</p></li>
+</ul>
+</li>
+</ul>
+<p>Mensajes de <code class="docutils literal notranslate"><span class="pre">Memory</span></code> y del Pipeline</p>
+<ul class="simple">
+<li><p>El bloque largo que comienza con:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">[Memory]</span> <span class="pre">Calling</span> <span class="pre">sklearn.pipeline._fit_transform_one...</span></code><br />
+indica que el <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> está usando <strong>caché</strong> (<code class="docutils literal notranslate"><span class="pre">memory=Memory(cache_dir)</span></code>):</p>
+<ul>
+<li><p>El preprocesador (<code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> con imputación + OneHotEncoder) se ejecuta una vez y se guarda en disco.</p></li>
+<li><p>En los siguientes folds de la CV no tiene que recalcular todo el OHE/imputación desde cero, lo que <strong>acelera bastante</strong> la búsqueda.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Dentro de ese mensaje se ven:</p>
+<ul>
+<li><p>El <code class="docutils literal notranslate"><span class="pre">ColumnTransformer</span></code> con:</p>
+<ul>
+<li><p>Numéricas: <code class="docutils literal notranslate"><span class="pre">SeniorCitizen</span></code>, <code class="docutils literal notranslate"><span class="pre">tenure</span></code>, <code class="docutils literal notranslate"><span class="pre">MonthlyCharges</span></code>, <code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> (imputadas con mediana).</p></li>
+<li><p>Categóricas: todas las variables de tipo categoría codificadas con <code class="docutils literal notranslate"><span class="pre">OneHotEncoder(handle_unknown='ignore')</span></code>.</p></li>
+</ul>
+</li>
+<li><p>También se listan algunas filas de ejemplo del dataset de entrada y el vector <code class="docutils literal notranslate"><span class="pre">y</span></code> (la columna <code class="docutils literal notranslate"><span class="pre">Churn</span></code>).</p></li>
+</ul>
+</li>
+</ul>
+<p>Logs de LightGBM</p>
+<p>Los mensajes tipo:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[LightGBM]</span> <span class="pre">[Info]</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">positive:</span> <span class="pre">1495,</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">negative:</span> <span class="pre">4139</span></code></p>
+<ul>
+<li><p>Muestran el <strong>nº de observaciones de la clase positiva y negativa</strong> en el conjunto de entrenamiento (desbalance moderado).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[LightGBM]</span> <span class="pre">[Info]</span> <span class="pre">Total</span> <span class="pre">Bins</span> <span class="pre">667</span></code></p>
+<ul>
+<li><p>Cantidad total de <em>bins</em> generados internamente para discretizar las features.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[LightGBM]</span> <span class="pre">[Info]</span> <span class="pre">Number</span> <span class="pre">of</span> <span class="pre">data</span> <span class="pre">points</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">train</span> <span class="pre">set:</span> <span class="pre">5634,</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">used</span> <span class="pre">features:</span> <span class="pre">45</span></code></p>
+<ul>
+<li><p>Se están usando <strong>5634 filas</strong> y <strong>45 variables</strong> luego de todo el preprocesamiento (OHE incluido).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[LightGBM]</span> <span class="pre">[Info]</span> <span class="pre">Start</span> <span class="pre">training</span> <span class="pre">from</span> <span class="pre">score</span> <span class="pre">0.000000</span></code></p>
+<ul>
+<li><p>LightGBM inicializa el modelo asumiendo un score base (probabilidad media inicial de la clase positiva).</p></li>
+</ul>
+</li>
+</ul>
+<p>Estos mensajes son puramente informativos y confirman que el modelo está entrenando correctamente.</p>
+<p>Métrica principal obtenida</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Best</span> <span class="pre">ROC-AUC</span> <span class="pre">(cv=5):</span> <span class="pre">0.8339218758605339</span></code></p>
+<ul>
+<li><p>El mejor modelo encontrado con el grid actual alcanza un <strong>ROC-AUC ≈ 0.834</strong> promedio en validación cruzada de 5 folds.</p></li>
+<li><p>Esto indica una <strong>buena capacidad discriminativa</strong>, aunque algo por debajo del XGBoost (~0.848) y del Random Forest (~0.844) que entrenaste antes.</p></li>
+<li><p>Aun así, es un modelo competitivo y sirve como <strong>tercer benchmark fuerte</strong>.</p></li>
+</ul>
+</li>
+</ul>
+<p>Mejores hiperparámetros encontrados</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Best</span> <span class="pre">params</span> <span class="pre">(cv=5):</span> <span class="pre">{'clf__class_weight':</span> <span class="pre">'balanced',</span> <span class="pre">'clf__colsample_bytree':</span> <span class="pre">0.8,</span> <span class="pre">'clf__max_bin':</span> <span class="pre">255,</span> <span class="pre">'clf__min_child_samples':</span> <span class="pre">20,</span> <span class="pre">'clf__num_leaves':</span> <span class="pre">31,</span> <span class="pre">'clf__reg_alpha':</span> <span class="pre">0.5,</span> <span class="pre">'clf__reg_lambda':</span> <span class="pre">0.5,</span> <span class="pre">'clf__subsample':</span> <span class="pre">0.8}</span></code></p></li>
+</ul>
+<p>Interpretación de cada uno:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__class_weight:</span> <span class="pre">'balanced'</span></code></p>
+<ul>
+<li><p>LightGBM <strong>pondera más la clase minoritaria (Churn=1)</strong> para compensar el desbalance (1495 vs 4139).</p></li>
+<li><p>Esto suele mejorar métricas como F1 y recall de la clase positiva.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__num_leaves:</span> <span class="pre">31</span></code></p>
+<ul>
+<li><p>Número máximo de hojas en cada árbol.</p></li>
+<li><p>31 es un valor moderado: árboles relativamente simples → <strong>mejor generalización y menos sobreajuste</strong>.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__min_child_samples:</span> <span class="pre">20</span></code></p>
+<ul>
+<li><p>Mínimo de ejemplos que debe tener una hoja.</p></li>
+<li><p>Obliga a que las hojas tengan al menos 20 muestras, haciendo el modelo más conservador.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__reg_alpha:</span> <span class="pre">0.5</span></code> y <code class="docutils literal notranslate"><span class="pre">clf__reg_lambda:</span> <span class="pre">0.5</span></code></p>
+<ul>
+<li><p><strong>Regularización L1 (<code class="docutils literal notranslate"><span class="pre">alpha</span></code>) y L2 (<code class="docutils literal notranslate"><span class="pre">lambda</span></code>)</strong> distintas de cero.</p></li>
+<li><p>Ambas penalizan la complejidad del modelo y ayudan a controlar el sobreajuste.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__subsample:</span> <span class="pre">0.8</span></code></p>
+<ul>
+<li><p>Cada árbol se entrena con un <strong>80 % de las filas</strong>, introduciendo aleatoriedad tipo <em>bagging</em>, lo que mejora la robustez del modelo.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__colsample_bytree:</span> <span class="pre">0.8</span></code></p>
+<ul>
+<li><p>Cada árbol ve sólo el <strong>80 % de las variables</strong> ⇒ reduce correlación entre árboles y también ayuda a la generalización.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clf__max_bin:</span> <span class="pre">255</span></code></p>
+<ul>
+<li><p>Número máximo de bins para discretizar las features.</p></li>
+<li><p>255 es el valor típico por defecto y se fijó para <strong>acelerar</strong> el entrenamiento.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="verificacion-de-rutas-del-proyecto-y-modelos-disponibles">
+<h2><strong>6. Verificación de rutas del proyecto y modelos disponibles</strong><a class="headerlink" href="#verificacion-de-rutas-del-proyecto-y-modelos-disponibles" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -817,6 +1059,9 @@ Ahora hay: [WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/lgbm_best
 </div>
 </div>
 </div>
+</section>
+<section id="comparacion-final-de-modelos-en-el-conjunto-de-prueba-rf-vs-xgb-vs-lgbm">
+<h2><strong>7. Comparación final de modelos en el conjunto de prueba (RF vs XGB vs LGBM)</strong><a class="headerlink" href="#comparacion-final-de-modelos-en-el-conjunto-de-prueba-rf-vs-xgb-vs-lgbm" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">candidates</span> <span class="o">=</span> <span class="p">{</span>
@@ -885,6 +1130,40 @@ Ahora hay: [WindowsPath(&#39;c:/Users/juana/MLOPS/miniproyecto6/models/lgbm_best
 </table>
 </div></div></div>
 </div>
+<p>Interpretación</p>
+<ul class="simple">
+<li><p><strong>XGBoost (xgb)</strong> es tu mejor modelo global:</p>
+<ul>
+<li><p>Tiene el <strong>ROC-AUC más alto (0.846)</strong> → mejor capacidad de separar clientes que harán <em>churn</em>.</p></li>
+<li><p>Tiene también la <strong>mejor accuracy (0.803)</strong>.</p></li>
+<li><p>Su F1 es inferior a RF pero aceptable, considerando el desbalance.</p></li>
+</ul>
+</li>
+<li><p><strong>Random Forest (rf)</strong> muestra:</p>
+<ul>
+<li><p>Buen F1 (el mejor de los tres)</p></li>
+<li><p>Pero menor ROC-AUC y accuracy en comparación con XGB.</p></li>
+</ul>
+</li>
+<li><p><strong>LightGBM (lgbm)</strong>:</p>
+<ul>
+<li><p>Es el que peor se desempeña en este caso.</p></li>
+<li><p>Aunque no está mal, queda por detrás de XGB y RF en todas las métricas.</p></li>
+</ul>
+</li>
+</ul>
+<section id="conclusion-final">
+<h3>Conclusión final<a class="headerlink" href="#conclusion-final" title="Link to this heading">#</a></h3>
+<p><strong>El mejor modelo para tu caso de Churn es XGBoost</strong>, ya que:</p>
+<ul class="simple">
+<li><p>Generaliza mejor (mejor ROC-AUC y accuracy en test)</p></li>
+<li><p>Maneja bien el desbalance</p></li>
+<li><p>Logra la mejor separación entre clases</p></li>
+</ul>
+</section>
+</section>
+<section id="evaluacion-final-del-mejor-modelo-xgboost-en-el-conjunto-de-prueba">
+<h2><strong>8. Evaluación final del mejor modelo (XGBoost) en el conjunto de prueba</strong><a class="headerlink" href="#evaluacion-final-del-mejor-modelo-xgboost-en-el-conjunto-de-prueba" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Escoge el mejor por ROC-AUC y muestra reporte</span>
@@ -953,6 +1232,40 @@ weighted avg       0.79      0.80      0.79      1409
 </table>
 </div></div></div>
 </div>
+<p>Clase 0 (No Churn)</p>
+<ul class="simple">
+<li><p><strong>Precision 0.84:</strong> de los usuarios predichos como <em>No Churn</em>, el 84% realmente no se va.</p></li>
+<li><p><strong>Recall 0.91:</strong> captura correctamente el 91% de los clientes que NO hacen churn.</p></li>
+<li><p><strong>F1 0.87:</strong> excelente equilibrio.</p></li>
+</ul>
+<p>Esto significa que el modelo es <strong>muy bueno identificando clientes que se quedan</strong>.</p>
+<ul class="simple">
+<li><p><strong>Precision 0.67:</strong> cuando el modelo dice que alguien hará churn, acierta un 67%.</p></li>
+<li><p><strong>Recall 0.51:</strong> solo identifica correctamente al 51% de los clientes que sí se irán.</p></li>
+<li><p><strong>F1 0.58:</strong> rendimiento moderado.</p></li>
+</ul>
+<p>Esto refleja la dificultad del problema:<br />
+<strong>es más difícil detectar a los clientes que sí se van</strong>, típico en datasets desbalanceados.
+Aciertos:</p>
+<ul class="simple">
+<li><p><strong>941</strong> No Churn clasificados correctamente.</p></li>
+<li><p><strong>191</strong> Churn clasificados correctamente.</p></li>
+</ul>
+<p>Errores:</p>
+<ul class="simple">
+<li><p><strong>94</strong> clientes que se quedan, el modelo los marcó como churn (falsos positivos).</p></li>
+<li><p><strong>183</strong> clientes que sí se van, el modelo NO los detectó (falsos negativos).</p></li>
+</ul>
+<p><strong>Los falsos negativos (183)</strong> son especialmente importantes para empresas,<br />
+porque representan clientes que sí abandonan pero el modelo no los alerta.</p>
+<p>Conclusión general</p>
+<p>El modelo XGBoost:</p>
+<ul class="simple">
+<li><p>Es <strong>excelente identificando a los clientes que no se van</strong> (Recall = 0.91).</p></li>
+<li><p>Tiene <strong>buen poder de separación global</strong> (ROC-AUC = 0.846).</p></li>
+<li><p><strong>Detecta alrededor de la mitad de los churn reales</strong>, lo cual es razonable pero puede mejorarse ajustando el threshold o aplicando técnicas adicionales (SMOTE, focal loss, calibration, cost-sensitive learning).</p></li>
+</ul>
+<p>Este es un <strong>resultado sólido y típico</strong> para un problema real de churn con desbalance.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># === Paths (ajústalos si ya los tienes definidos) ===</span>
@@ -1126,6 +1439,7 @@ TRANSFORMED_NAMES: 45
 </div>
 </div>
 </section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -1181,6 +1495,31 @@ TRANSFORMED_NAMES: 45
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-inicial-para-modelado-supervisado"><strong>1. Configuración inicial para modelado supervisado</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generacion-de-splits-crudos-data-interim-para-telco-churn"><strong>2. Generación de <em>splits</em> crudos (data/interim) para Telco Churn</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-de-la-busqueda-de-hiperparametros-para-random-forest"><strong>3. Resultados de la búsqueda de hiperparámetros para Random Forest</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-de-la-busqueda-de-hiperparametros-para-xgboost-xgbclassifier"><strong>4. Resultados de la búsqueda de hiperparámetros para XGBoost (XGBClassifier)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-de-la-busqueda-de-hiperparametros-con-lightgbm"><strong>5. Resultados de la búsqueda de hiperparámetros con LightGBM</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verificacion-de-rutas-del-proyecto-y-modelos-disponibles"><strong>6. Verificación de rutas del proyecto y modelos disponibles</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparacion-final-de-modelos-en-el-conjunto-de-prueba-rf-vs-xgb-vs-lgbm"><strong>7. Comparación final de modelos en el conjunto de prueba (RF vs XGB vs LGBM)</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-final">Conclusión final</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluacion-final-del-mejor-modelo-xgboost-en-el-conjunto-de-prueba"><strong>8. Evaluación final del mejor modelo (XGBoost) en el conjunto de prueba</strong></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

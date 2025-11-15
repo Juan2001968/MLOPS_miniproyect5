@@ -359,7 +359,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -375,6 +377,26 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-y-rutas-del-proyecto"><strong>1. imports y rutas del proyecto</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset-y-normalizacion-basica"><strong>2. Carga del dataset y normalización básica</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteccion-automatica-de-variables-numericas-y-categoricas"><strong>3. Detección automática de variables numéricas y categóricas</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detectores-automaticos-de-tipo">Detectores automáticos de tipo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quitar-columnas-que-no-deben-transformarse">Quitar columnas que no deben transformarse</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-de-columnas-detectadas">Resumen de columnas detectadas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#division-de-datos-en-entrenamiento-y-prueba-train-test-split"><strong>4. División de datos en entrenamiento y prueba (train/test split)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers"><strong>5. Tratamiento de outliers</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-de-preprocesamiento-imputacion-escalado-y-one-hot-encoding"><strong>6. Pipeline de Preprocesamiento: Imputación, Escalado y One-Hot Encoding</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aplicar-el-preprocesador-a-train-test-y-reconstruir-dataframes"><strong>7. Aplicar el preprocesador a Train/Test y reconstruir DataFrames</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guardar-datasets-procesados-preprocesador"><strong>8. Guardar datasets procesados, preprocesador</strong></a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -386,6 +408,8 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="preprocesamiento-de-datos">
 <h1><strong>3. Preprocesamiento de Datos</strong><a class="headerlink" href="#preprocesamiento-de-datos" title="Link to this heading">#</a></h1>
+<section id="imports-y-rutas-del-proyecto">
+<h2><strong>1. imports y rutas del proyecto</strong><a class="headerlink" href="#imports-y-rutas-del-proyecto" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># === Sección 3: Preprocesamiento ===</span>
@@ -411,6 +435,9 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
+<section id="carga-del-dataset-y-normalizacion-basica">
+<h2><strong>2. Carga del dataset y normalización básica</strong><a class="headerlink" href="#carga-del-dataset-y-normalizacion-basica" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Usamos el parquet que guardaste en el EDA</span>
@@ -442,6 +469,30 @@ document.write(`
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p>Este bloque de código:</p>
+<ul>
+<li><p>Carga el dataset desde el mejor formato disponible (parquet si existe, CSV si no).</p></li>
+<li><p>Limpia y estandariza los nombres de las columnas.</p></li>
+<li><p>Define de forma explícita:</p>
+<ul>
+<li><p>La variable objetivo (<code class="docutils literal notranslate"><span class="pre">Churn</span></code>).</p></li>
+<li><p>La columna identificadora de cliente (<code class="docutils literal notranslate"><span class="pre">customerID</span></code> o <code class="docutils literal notranslate"><span class="pre">customerid</span></code>).</p></li>
+</ul>
+</li>
+<li><p>Garantiza que:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">Churn</span></code> esté en formato numérico binario 0/1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TotalCharges</span></code> sea realmente una variable numérica.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Tras este paso, el DataFrame <code class="docutils literal notranslate"><span class="pre">df</span></code> queda listo para entrar en la fase de <strong>preprocesamiento y modelado</strong>, con menos riesgo de errores por tipos de datos o nombres de columnas.</p></li>
+</ul>
+</section>
+<section id="deteccion-automatica-de-variables-numericas-y-categoricas">
+<h2><strong>3. Detección automática de variables numéricas y categóricas</strong><a class="headerlink" href="#deteccion-automatica-de-variables-numericas-y-categoricas" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detectores automáticos</span>
@@ -465,6 +516,65 @@ Categóricas: 15 [&#39;gender&#39;, &#39;Partner&#39;, &#39;Dependents&#39;, &#3
 </div>
 </div>
 </div>
+<section id="detectores-automaticos-de-tipo">
+<h3>Detectores automáticos de tipo<a class="headerlink" href="#detectores-automaticos-de-tipo" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Se construyen dos listas a partir de los tipos de datos de <code class="docutils literal notranslate"><span class="pre">df</span></code>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">cat_cols</span> <span class="pre">=</span> <span class="pre">df.select_dtypes(include=[&quot;object&quot;]).columns.tolist()</span></code></p>
+<ul>
+<li><p>Columnas con tipo <code class="docutils literal notranslate"><span class="pre">object</span></code> → se consideran <strong>categóricas</strong>.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_cols</span> <span class="pre">=</span> <span class="pre">df.select_dtypes(include=[np.number,</span> <span class="pre">&quot;bool&quot;]).columns.tolist()</span></code></p>
+<ul>
+<li><p>Columnas numéricas (<code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>) y booleanas → se consideran <strong>numéricas</strong>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="quitar-columnas-que-no-deben-transformarse">
+<h3>Quitar columnas que no deben transformarse<a class="headerlink" href="#quitar-columnas-que-no-deben-transformarse" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Se limpia cada lista para evitar transformar columnas especiales:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">ID_COL</span> <span class="pre">in</span> <span class="pre">cat_cols:</span> <span class="pre">cat_cols.remove(ID_COL)</span></code></p>
+<ul>
+<li><p>El ID del cliente (<code class="docutils literal notranslate"><span class="pre">customerID</span></code>) no se debe codificar; solo identifica filas.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">TARGET</span> <span class="pre">in</span> <span class="pre">cat_cols:</span> <span class="pre">cat_cols.remove(TARGET)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">TARGET</span> <span class="pre">in</span> <span class="pre">num_cols:</span> <span class="pre">num_cols.remove(TARGET)</span></code></p>
+<ul>
+<li><p>El target (<code class="docutils literal notranslate"><span class="pre">Churn</span></code>) no debe aparecer ni en la lista de categóricas ni en la de numéricas
+para que <strong>no se le aplique ni OneHotEncoder ni StandardScaler</strong>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Con esto, el preprocesamiento solo se aplica a <strong>features</strong> y nunca al identificador ni a la variable objetivo.</p></li>
+</ul>
+</section>
+<section id="resumen-de-columnas-detectadas">
+<h3>Resumen de columnas detectadas<a class="headerlink" href="#resumen-de-columnas-detectadas" title="Link to this heading">#</a></h3>
+<p>Al final se imprimen las listas resultantes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">print(&quot;Numéricas:&quot;,</span> <span class="pre">len(num_cols),</span> <span class="pre">num_cols)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">print(&quot;Categóricas:&quot;,</span> <span class="pre">len(cat_cols),</span> <span class="pre">cat_cols)</span></code></p></li>
+</ul>
+<p>La salida que se observa es:</p>
+<ul class="simple">
+<li><p><strong>Numéricas: 4</strong><br />
+<code class="docutils literal notranslate"><span class="pre">['SeniorCitizen',</span> <span class="pre">'tenure',</span> <span class="pre">'MonthlyCharges',</span> <span class="pre">'TotalCharges']</span></code></p></li>
+<li><p><strong>Categóricas: 15</strong><br />
+<code class="docutils literal notranslate"><span class="pre">['gender',</span> <span class="pre">'Partner',</span> <span class="pre">'Dependents',</span> <span class="pre">'PhoneService',</span> <span class="pre">'MultipleLines',</span> <span class="pre">'InternetService',</span>&#160;&#160; <span class="pre">'OnlineSecurity',</span> <span class="pre">'OnlineBackup',</span> <span class="pre">'DeviceProtection',</span> <span class="pre">'TechSupport',</span> <span class="pre">'StreamingTV',</span>&#160;&#160; <span class="pre">'StreamingMovies',</span> <span class="pre">'Contract',</span> <span class="pre">'PaperlessBilling',</span> <span class="pre">'PaymentMethod']</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="division-de-datos-en-entrenamiento-y-prueba-train-test-split">
+<h2><strong>4. División de datos en entrenamiento y prueba (train/test split)</strong><a class="headerlink" href="#division-de-datos-en-entrenamiento-y-prueba-train-test-split" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">TARGET</span><span class="p">])</span>
@@ -489,6 +599,17 @@ Test:  (1409, 20) 0.265
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p>El conjunto de entrenamiento contiene 5634 filas y 20 variables.</p></li>
+<li><p>El conjunto de prueba contiene 1409 filas y 20 variables.</p></li>
+<li><p>La media del target (Churn) es 0.265 en ambos conjuntos.
+Esto significa que el 26.5% de los clientes tienen Churn (=1),
+y la estratificación funcionó correctamente.</p></li>
+<li><p>La suma 5634 + 1409 = 7043 confirma que no se perdió ningún registro.</p></li>
+</ul>
+</section>
+<section id="tratamiento-de-outliers">
+<h2><strong>5. Tratamiento de outliers</strong><a class="headerlink" href="#tratamiento-de-outliers" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span>
@@ -595,6 +716,33 @@ Test:  (1409, 20) 0.265
 </div>
 </div>
 </div>
+<p>El objetivo principal es:</p>
+<ul class="simple">
+<li><p>Calcular límites inferiores y superiores para cada variable numérica (por percentiles o por IQR).</p></li>
+<li><p>Aplicar una <strong>estrategia</strong> sobre los valores que se salen de esos límites:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;winsorizar&quot;</span></code> → recortar los valores extremos al límite (mantiene todas las filas).</p></li>
+</ul>
+</li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">ManejoAtipicos</span></code> es un transformer robusto para tratar outliers dentro de pipelines de scikit-learn.</p>
+<ul class="simple">
+<li><p>Soporta:</p>
+<ul>
+<li><p>Cálculo de límites por IQR o por percentiles.</p></li>
+<li><p>Dos estrategias: winsorizar (recortar) o eliminar filas.</p></li>
+</ul>
+</li>
+<li><p>Mantiene:</p>
+<ul>
+<li><p>Nombres de columnas.</p></li>
+<li><p>Tipos de datos originales cuando es posible.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="pipeline-de-preprocesamiento-imputacion-escalado-y-one-hot-encoding">
+<h2><strong>6. Pipeline de Preprocesamiento: Imputación, Escalado y One-Hot Encoding</strong><a class="headerlink" href="#pipeline-de-preprocesamiento-imputacion-escalado-y-one-hot-encoding" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scale_numeric</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># &lt;- cambia a True si vas a usar modelos que lo requieran</span>
@@ -625,6 +773,20 @@ Test:  (1409, 20) 0.265
 </div>
 </div>
 </div>
+<p>Lo que produce este preprocesador al usarse con .fit_transform(X):</p>
+<ul class="simple">
+<li><p>Para columnas numéricas:
+Imputa valores faltantes con la mediana.
+(Opcional) Estandariza si scale_numeric=True.</p></li>
+<li><p>Para columnas categóricas:
+Imputa NaN automáticamente (OneHotEncoder lo maneja internamente).
+Genera columnas dummy usando One-Hot Encoding.
+Ignora categorías desconocidas durante inferencia.</p></li>
+<li><p>El ColumnTransformer genera un ARRAY NumPy con todas las columnas procesadas.</p></li>
+</ul>
+</section>
+<section id="aplicar-el-preprocesador-a-train-test-y-reconstruir-dataframes">
+<h2><strong>7. Aplicar el preprocesador a Train/Test y reconstruir DataFrames</strong><a class="headerlink" href="#aplicar-el-preprocesador-a-train-test-y-reconstruir-dataframes" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ajustar SOLO con train</span>
@@ -651,6 +813,16 @@ X_train: (5634, 45) | X_test: (1409, 45)
 </div>
 </div>
 </div>
+<p>A continuación se muestra el código que:</p>
+<ol class="arabic simple">
+<li><p><strong>Ajusta</strong> el <code class="docutils literal notranslate"><span class="pre">preprocessor</span></code> <strong>solo</strong> con los datos de entrenamiento.</p></li>
+<li><p><strong>Transforma</strong> <code class="docutils literal notranslate"><span class="pre">X_train</span></code> y <code class="docutils literal notranslate"><span class="pre">X_test</span></code> usando el mismo preprocesador.</p></li>
+<li><p><strong>Reconstruye</strong> DataFrames con nombres de columnas después del One-Hot Encoding.</p></li>
+<li><p><strong>Muestra</strong> las dimensiones finales de los conjuntos procesados.</p></li>
+</ol>
+</section>
+<section id="guardar-datasets-procesados-preprocesador">
+<h2><strong>8. Guardar datasets procesados, preprocesador</strong><a class="headerlink" href="#guardar-datasets-procesados-preprocesador" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Guardar datasets procesados</span>
@@ -694,6 +866,34 @@ Preprocessor guardado en: C:\Users\juana\MLOPS\miniproyecto6\models\preprocessor
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p>Se guardan <strong>cuatro archivos Parquet</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">X_train.parquet</span></code> → features de entrenamiento procesadas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X_test.parquet</span></code> → features de prueba procesadas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_train.parquet</span></code> → variable objetivo de entrenamiento.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_test.parquet</span></code> → variable objetivo de prueba.</p></li>
+</ul>
+</li>
+<li><p>También se guarda el objeto <code class="docutils literal notranslate"><span class="pre">preprocessor</span></code> ya ajustado en:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">models/preprocessor.joblib</span></code>, lo que permite:</p>
+<ul>
+<li><p>Reutilizar exactamente el mismo preprocesamiento en producción (FastAPI, etc.).</p></li>
+<li><p>Usarlo dentro de pipelines y GridSearch sin volver a definir toda la lógica.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>La última línea devuelve <code class="docutils literal notranslate"><span class="pre">(np.int64(0),</span> <span class="pre">np.int64(0))</span></code>, que significa:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> valores faltantes en <code class="docutils literal notranslate"><span class="pre">X_train_df</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> valores faltantes en <code class="docutils literal notranslate"><span class="pre">X_test_df</span></code>.</p></li>
+</ul>
+</li>
+<li><p>En otras palabras, <strong>todos los NaNs han sido tratados correctamente</strong> en los datos procesados y el dataset está listo para alimentar modelos de Machine Learning sin errores por valores faltantes.</p></li>
+</ul>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -750,6 +950,33 @@ Preprocessor guardado en: C:\Users\juana\MLOPS\miniproyecto6\models\preprocessor
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports-y-rutas-del-proyecto"><strong>1. imports y rutas del proyecto</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-del-dataset-y-normalizacion-basica"><strong>2. Carga del dataset y normalización básica</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteccion-automatica-de-variables-numericas-y-categoricas"><strong>3. Detección automática de variables numéricas y categóricas</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#detectores-automaticos-de-tipo">Detectores automáticos de tipo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quitar-columnas-que-no-deben-transformarse">Quitar columnas que no deben transformarse</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen-de-columnas-detectadas">Resumen de columnas detectadas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#division-de-datos-en-entrenamiento-y-prueba-train-test-split"><strong>4. División de datos en entrenamiento y prueba (train/test split)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tratamiento-de-outliers"><strong>5. Tratamiento de outliers</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-de-preprocesamiento-imputacion-escalado-y-one-hot-encoding"><strong>6. Pipeline de Preprocesamiento: Imputación, Escalado y One-Hot Encoding</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aplicar-el-preprocesador-a-train-test-y-reconstruir-dataframes"><strong>7. Aplicar el preprocesador a Train/Test y reconstruir DataFrames</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guardar-datasets-procesados-preprocesador"><strong>8. Guardar datasets procesados, preprocesador</strong></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

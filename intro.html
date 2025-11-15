@@ -386,7 +386,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proposito">Propósito</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-telco-customer-churn">Dataset (Telco Customer Churn)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#directorio">Directorio</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checklist-de-objetivos">Checklist de Objetivos</a></li>
 </ul>
             </nav>
         </div>
@@ -412,7 +411,6 @@ Se implementa un flujo completo de trabajo de <strong>aprendizaje automático e 
 <li><p>Análisis de <strong>importancia de variables</strong> y <strong>explicabilidad</strong> con técnicas de interpretabilidad (<code class="docutils literal notranslate"><span class="pre">LIME</span></code> y <code class="docutils literal notranslate"><span class="pre">SHAP</span></code>).</p></li>
 <li><p>Despliegue del modelo a través de un <strong>servicio FastAPI</strong>, empaquetado con <strong>Docker</strong>, y orquestado con <strong>CI/CD</strong> en <strong>GitHub Actions</strong>.</p></li>
 <li><p>Visualización de resultados en un <strong>dashboard interactivo</strong> construido con Dash/Plotly.</p></li>
-<li><p>Recomendaciones finales para el <strong>monitoreo post-despliegue</strong> y gestión del modelo en producción.</p></li>
 </ul>
 </section>
 <section id="dataset-telco-customer-churn">
@@ -433,25 +431,7 @@ Se implementa un flujo completo de trabajo de <strong>aprendizaje automático e 
 <li><p><strong>Modelado (Árboles)</strong>: construcción de <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> con <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> para modelos de árbol (RF, XGB, LGBM, CatBoost) y comparación de desempeño.</p></li>
 <li><p><strong>Evaluación de Métricas</strong>: precisión, recall, F1, matriz de confusión y curva ROC-AUC.</p></li>
 <li><p><strong>Interpretabilidad</strong>: análisis de importancia de variables y explicabilidad local/global con LIME y SHAP.</p></li>
-<li><p><strong>Servicio de Inferencia (FastAPI)</strong>: diseño del endpoint <code class="docutils literal notranslate"><span class="pre">/predict</span></code>, validación de entrada con <code class="docutils literal notranslate"><span class="pre">pydantic</span></code> y ejemplo de solicitud/response.</p></li>
-<li><p><strong>Docker + CI/CD</strong>: construcción del contenedor, automatización del flujo de despliegue con GitHub Actions.</p></li>
-<li><p><strong>Dashboard (Dash/Plotly)</strong>: visualización interactiva de métricas y predicciones del modelo.</p></li>
-<li><p><strong>Monitoreo</strong>: estrategias para detección de <em>data drift</em>, <em>label drift</em> y alertas operativas en entorno productivo.</p></li>
 </ol>
-</section>
-<section id="checklist-de-objetivos">
-<h2>Checklist de Objetivos<a class="headerlink" href="#checklist-de-objetivos" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>[ ] Implementar <code class="docutils literal notranslate"><span class="pre">Pipeline</span></code> con preprocesamiento automático.</p></li>
-<li><p>[ ] Realizar <code class="docutils literal notranslate"><span class="pre">GridSearchCV</span></code> para modelos basados en árboles.</p></li>
-<li><p>[ ] Evaluar el rendimiento con métricas de clasificación (ROC-AUC, F1, recall).</p></li>
-<li><p>[ ] Analizar interpretabilidad con <em>Feature Importance</em>, <em>LIME</em> y <em>SHAP</em>.</p></li>
-<li><p>[ ] Crear servicio de inferencia con <strong>FastAPI</strong>.</p></li>
-<li><p>[ ] Contenerizar con <strong>Docker</strong>.</p></li>
-<li><p>[ ] Configurar <strong>CI/CD</strong> con <strong>GitHub Actions</strong>.</p></li>
-<li><p>[ ] Desarrollar un <strong>Dashboard interactivo (Dash/Plotly)</strong>.</p></li>
-<li><p>[ ] Diseñar recomendaciones para el <strong>monitoreo del modelo</strong>.</p></li>
-</ul>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -515,7 +495,6 @@ Se implementa un flujo completo de trabajo de <strong>aprendizaje automático e 
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proposito">Propósito</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-telco-customer-churn">Dataset (Telco Customer Churn)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#directorio">Directorio</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checklist-de-objetivos">Checklist de Objetivos</a></li>
 </ul>
   </nav></div>
 
